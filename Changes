@@ -1,0 +1,44 @@
+Revision history for WWW-Mixi-Scraper
+
+0.07  not yet released
+  - new plugin: NewMusic
+
+0.06  2007/08/11
+  - new plugin: ViewEvent
+  - several View... plugins return ->{link} and ->{images} properly
+  - requested uri is now preserved in plugin's $self->{uri}
+    for later use (and added ->uri shortcut to Mech.pm)
+  - ShowFriend returns outline info as well
+
+0.05  2007/07/31
+  - applied patches from kazeburo
+    (http://blog.nomadscafe.jp/archives/000723.html)
+
+0.04  2007/07/03
+  - new plugin: NewVideo (by Tatsuhiko Miyagawa)
+  - some of the live tests spat warnings and/or failed
+    when the scraper returns nothing
+
+0.03  2007/07/02
+  - now you can tweak_uri() built in the build_uri()
+    e.g. to get contents from 'video.mixi.jp/view_video.pl'
+    (instead of 'mixi.jp/view_video.pl')
+
+0.02  2007/07/02
+  - new plugins: ListMessage, ViewMessage, ShowCalendar
+  - included several live tests
+    (these won't be tested by normal make process and requires
+    extra modules not declared in Makefile.PL, such as YAML,
+    DateTime::Format::Strptime, File::Slurp, etc)
+  - now logs in just before it needs to get contents;
+    i.e. doesn't log in while testing with local files
+  - added Time::HiRes dependency to behave and not to
+    access too frequently.
+  - fixed _datetime() as some pages doesn't have date info.
+  - fixed validator() (actually, is_valid) not to spit errors
+    when it receives some undefined query parameters.
+    thanks to miyagawa.
+
+0.01  2007/06/04
+  - initial release
+
