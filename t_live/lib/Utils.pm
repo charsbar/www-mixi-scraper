@@ -10,10 +10,11 @@ use File::Spec;
 use HTTP::Cookies;
 use YAML;
 
-our @EXPORT = qw( login_to date_format run_tests its_local );
+our @EXPORT = qw( login_to date_format run_tests its_local matches );
 
 my $conf = load_yaml('live_test.yml');
 my $local;
+my $date_format;
 
 sub its_local () { $local; }
 
@@ -78,7 +79,7 @@ sub test_file {
 sub date_format {
   my $pattern = shift;
 
-  DateTime::Format::Strptime->new(
+  $date_format = DateTime::Format::Strptime->new(
     pattern => $pattern,
     time_zone => 'Asia/Tokyo',
   )
@@ -105,6 +106,58 @@ sub test_remote {
   warn "remote test";
 
   main::test(@_);
+}
+
+sub matches {
+  my ($item, $rules) = @_;
+
+  foreach my $key ( keys %{ $rules } ) {
+    my $rule = $rules->{$key} || '';
+       $rule =~ s/_if_remote// if !$local && !ref $rule;
+
+    if ( $rule eq 'string' ) {
+      _ok( $key, $item->{$key} );
+    }
+    if ( $rule eq 'integer' ) {
+      _ok( $key, $item->{$key} );
+    }
+    if ( $rule eq 'datetime' ) {
+      _ok( $key, $item->{$key} );
+      my $dt = $date_format->parse_datetime( $item->{$key} );
+      Test::More::ok defined $dt;
+    }
+    if ( $rule eq 'uri' ) {
+      _ok( $key, $item->{$key} );
+      Test::More::ok ref $item->{$key} && $item->{$key}->isa('URI');
+    }
+    if ( ref $rule eq 'HASH' ) {
+      if ( ref $item->{$key} eq 'ARRAY' ) {
+        foreach my $subitem ( @{ $item->{$key} } ) {
+          matches( $subitem => $rule );
+        }
+      }
+      if ( ref $item->{$key} eq 'HASH' ) {
+        matches( $item->{$key} => $rule );
+      }
+    }
+  }
+}
+
+sub _ok {
+  my ($key, $value) = @_;
+
+  if ( $ENV{TEST_VERBOSE} ) {
+    Test::More::ok defined $value, _encode( "$key: $value" );
+  }
+  else {
+    Test::More::ok defined $value;
+  }
+}
+
+sub _encode {
+  my $string = shift;
+  my $encoding = $^O eq 'MSWin32' ? 'shiftjis' : 'euc-jp';
+  Encode::encode( $encoding => $string );
 }
 
 1;
