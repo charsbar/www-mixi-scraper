@@ -14,12 +14,12 @@ my $rules = {
 
 date_format('%Y-%m-%d %H:%M');
 
-run_tests('list_comment') or ok 'ignored';
+run_tests('list_comment') or ok 1, 'skipped: no tests';
 
 sub test {
   my @items = $mixi->list_comment->parse(@_);
 
-  return ok 'skipped: no comments' unless @items;
+  return ok 1, 'skipped: no comments' unless @items;
 
   foreach my $item ( @items ) {
     matches( $item => $rules );

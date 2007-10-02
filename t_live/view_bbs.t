@@ -11,8 +11,8 @@ my $rules = {
   description => 'string',
   time        => 'datetime',
   name_link   => 'uri',
-  link        => 'uri_if_remote',
-  comment => {
+  link        => 'uri',
+  comments => {
     name        => 'string',
     description => 'string',
     time        => 'datetime',
@@ -26,7 +26,7 @@ my $rules = {
 
 date_format('%Y-%m-%d %H:%M');
 
-run_tests('view_bbs') or ok 'ignored';
+run_tests('view_bbs') or ok 1, 'skipped: no tests';
 
 sub test {
   my $bbs = $mixi->view_bbs->parse(@_);

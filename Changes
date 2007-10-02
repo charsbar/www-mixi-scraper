@@ -1,6 +1,10 @@
 Revision history for WWW-Mixi-Scraper
 
-0.07  not yet released
+0.07  2007/10/02
+  - scraping rules are totally refactored due to the mixi's renewal.
+    now it uses id/class attributes everywhere, so scraping is much
+    easier. mixi++ (and k*z*b*r*++, who secretly sent me a patch)
+  - and now live tests dump their contents if you test verbosely.
   - new plugin: NewMusic
 
 0.06  2007/08/11

@@ -45,7 +45,7 @@ sub scrape {
   my $stash = $scraper{message}->scrape(\$html);
 
   my $time = ( map { $_->{string} } grep { !$_->{table} } @{ $stash->{body} } )[0];
-  $time =~ s/^.+://;
+     $time =~ s/^.*(\d{4})\D+(\d{2})\D+(\d{2})\D+(\d{2})\D+(\d{2}).*$/$1\-$2\-$3 $4:$5/;
 
   my $message = {
     subject     => $stash->{meta}->{subject},

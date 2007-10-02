@@ -9,7 +9,7 @@ my $rules = {
   subject     => 'string',
   description => 'string',
   time        => 'datetime',
-  link        => 'uri_if_remote',
+  link        => 'uri',
 # not yet implemented
 #  level => {
 #    description => 'string',
@@ -29,7 +29,7 @@ my $rules = {
 
 date_format('%Y-%m-%d %H:%M');
 
-run_tests('view_diary') or ok 'ignored';
+run_tests('view_diary') or ok 1, 'skipped: no tests';
 
 sub test {
   my $diary = $mixi->view_diary->parse(@_);

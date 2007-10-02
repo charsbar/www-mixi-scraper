@@ -11,18 +11,18 @@ sub scrape {
 
   my %scraper;
   $scraper{comments} = scraper {
-    process 'td[width="450"]',
+    process 'dl>dd',
       string => 'TEXT';
-    process 'td[width="450"]>a',
+    process 'dl>dd>a',
       link => '@href',
       subject => 'TEXT';
-    process 'td[width="180"]',
+    process 'dl>dt',
       time => 'TEXT';
     result qw( string time link subject );
   };
 
   $scraper{list} = scraper {
-    process 'tr[bgcolor="#FFFFFF"]',
+    process 'div.listCommentArea>ul.entryList01>li',
       'comments[]' => $scraper{comments};
     result qw( comments );
   };

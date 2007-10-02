@@ -11,18 +11,18 @@ sub scrape {
 
   my %scraper;
   $scraper{entries} = scraper {
-    process 'td[width="180"]',
+    process 'dl>dt',
       time => 'TEXT';
-    process 'td[width="450"]>a',
+    process 'dl>dd>a',
       subject => 'TEXT',
       link    => '@href';
-    process 'td[width="450"]',
+    process 'dl>dd',
       string => 'TEXT';
     result qw( string subject link time );
   };
 
   $scraper{list} = scraper {
-    process 'tr[bgcolor="#FFFFFF"]',
+    process 'div.newBbsArea>ul.entryList01>li',
       'entries[]' => $scraper{entries};
     result qw( entries );
   };

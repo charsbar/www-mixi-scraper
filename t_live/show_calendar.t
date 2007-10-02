@@ -16,12 +16,12 @@ my $rules = {
 
 date_format('%Y-%m-%d');
 
-run_tests('show_calendar') or ok 'ignored';
+run_tests('show_calendar') or ok 1, 'skipped: no tests';
 
 sub test {
   my @items = $mixi->show_calendar->parse(@_);
 
-  return ok 'skipped: no calendar items' unless @items;
+  return ok 1, 'skipped: no calendar items' unless @items;
 
   foreach my $item ( @items ) {
     matches( $item => $rules );

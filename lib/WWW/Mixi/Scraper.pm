@@ -3,7 +3,7 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use String::CamelCase qw( decamelize );
 use Module::Pluggable::Fast
@@ -92,7 +92,7 @@ WWW::Mixi::Scraper is also pluggable, so if you want to scrape something it can'
 
 WWW::Mixi has much longer history and is full-stack. The data it returns tends to be more complete, fine-tuned, and raw in many ways (including encoding). However, it tends to suffer from minor html changes as it heavily relies on regexes, and maybe it is too monolithic.
 
-In contrast, WWW::Mixi::Scraper hopefully tends to survive minor html changes as it relies on XPath. And basically it uses decoded perl strings, not octets. It's smaller, and pluggable. However, its data is more or less pre-processed and tends to lose some aspects such as proper line breaks. Also, it may be easier to be polluted with garbages (partly because mixi doesn't rely much on CSS; it's hard to locate exact area to scrape by XPath). And it may be harder to understand and maintain XPath rules.
+In contrast, WWW::Mixi::Scraper hopefully tends to survive minor html changes as it relies on XPath. And basically it uses decoded perl strings, not octets. It's smaller, and pluggable. However, its data is more or less pre-processed and tends to lose some aspects such as proper line breaks. Also, it may be easier to be polluted with garbages. And it may be harder to understand and maintain XPath rules.
 
 Which to choose? It depends. For now, ::Scraper is too limited, but if all you want is rough data to tell you who updated, or what was updated, ::Scraper may be a good option.
 

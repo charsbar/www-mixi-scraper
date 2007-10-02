@@ -16,31 +16,19 @@ sub _force_arrayref {
 }
 
 sub _datetime {
-  my $string = shift;
+  my $date = shift;
 
-  unless ( defined $string ) {
+  unless ( defined $date ) {
     warn "datetime is not defined"; return;
   }
 
-  $string =~ s/^\s+//s;
-  my @string = split /\s+/s, $string;
-  my ($date, $time);
-  if ( $string[2] && $string[2] =~ /\d+:\d+/ ) {
-     $date = join "", @string[0,1];
-     $time = $string[2];
-  }
-  else {
-     $date = $string[0];
-     $time = $string[1];
+  my $time;
+  if ( $date =~ s/\s*(\d+:\d+(?::\d+)?)\s*$// ) {
+    $time = $1;
   }
 
   $date =~ s/\D/\-/g;
   $date =~ s/\-+$//;
-
-  if ( $time ) {
-    $time =~ s/\D/:/g;
-    $time =~ s/:+$//;
-  }
 
   return $time ? "$date $time" : $date; # should be DateTime object?
 }

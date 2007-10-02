@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
 use WWW::Mixi::Scraper::Utils qw( _uri );
+use utf8;
 
 validator {qw( id is_number )};
 
@@ -21,15 +22,15 @@ sub _scrape_profile {
 
   my %scraper;
   $scraper{items} = scraper {
-    process 'td[width="80"]',
+    process 'dl>dt',
       key => 'TEXT';
-    process 'td[width!="80"]',
+    process 'dl>dd',
       value => 'TEXT';
     result qw( key value );
   };
 
   $scraper{profile} = scraper {
-    process 'table[width="425"]>tr[bgcolor="#FFFFFF"]',
+    process 'div#profile>ul>li',
       'items[]' => $scraper{items};
     result qw( items );
   };
@@ -57,13 +58,17 @@ sub _scrape_outline {
   };
 
   $scraper{outline} = scraper {
-    process 'table[bgcolor="#FEC977"]>tr>td[colspan="3"]',
-      'string[]' => 'TEXT';
-    process 'table[width="270"]>tr>td[colspan="3"]>a',
+    process 'div#myProfile>div.contents01>h3',
+      'string' => 'TEXT';
+    process 'div#myProfile>div.contents01>p.loginTime',
+      'description' => 'TEXT';
+    process 'div#myProfile>p.friendPath>a',
       'relations[]' => $scraper{relations};
-    process 'table[width="250"]>tr>td>img[vspace="2"]',
+    process 'div#myProfile>div.contents01>img',
       image => '@src';
-    result qw( image string relations );
+    process 'div#localNavigation>ul.localNaviFriend>li.top>a',
+      link  => '@href';
+    result qw( image string relations description link );
   };
 
   my $stash = $self->post_process($scraper{outline}->scrape(\$html))->[0];
@@ -77,22 +82,15 @@ sub _scrape_outline {
   $stash->{step} = scalar @relations;
   $stash->{relation} = shift @relations if @relations > 1;
 
-  foreach my $string (@{ delete $stash->{string} || [] }) {
-    if ( $string =~ /^(.+)\((\d+)\)\s+\(([^)]+)\)\s*$/ ) {
-      $stash->{name} = $1;
-      $stash->{count} = $2;
-      $stash->{description} = $3;
-    }
-    elsif ( $string =~ /^(.+)\((\d+)\)\s*$/ ) { # may be yourself
-      $stash->{name} = $1;
-      $stash->{count} = $2;
-    }
+  my $string = delete $stash->{string} || '';
+  if ( $string =~ s/\((\d+)\)$// ) {
+    $stash->{name}  = $string;
+    $stash->{count} = $1;
   }
-
-  # XXX: this fails when you test with local files.
-  # In this case, we can scrape the link from the 'snavi' toolbar
-  # but it's ugly.
-  $stash->{link} = $self->{uri};
+  if ( $stash->{description} ) {
+    $stash->{description} =~ s/^（//;
+    $stash->{description} =~ s/）$//;
+  }
 
   return $stash;
 }

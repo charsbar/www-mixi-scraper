@@ -16,7 +16,7 @@ my $rules = {
 
 date_format('%Y-%m-%d %H:%M');
 
-run_tests('view_message') or ok 'ignored';
+run_tests('view_message') or ok 1, 'skipped: no tests';
 
 sub test {
   my $message = $mixi->view_message->parse(@_);

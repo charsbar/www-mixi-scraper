@@ -12,7 +12,7 @@ my $rules = {
   link  => 'uri_if_remote',
 };
 
-run_tests('show_friend') or ok 'ignored';
+run_tests('show_friend') or ok 1, 'skipped: no tests';
 
 sub test {
   my $friend = $mixi->show_friend->parse(@_);

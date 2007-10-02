@@ -21,69 +21,48 @@ sub scrape {
     result qw( link thumb_link );
   };
 
-  $scraper{diary_body} = scraper {
-    process 'tr[valign="top"]>td[nowrap]',
-      time => 'TEXT';
-    process 'tr[valign="top"]>td[width="430"]',
-      subject => 'TEXT';
-    process 'tr>td>table[width="410"]>tr>td[class="h12"]',
-      description => 'TEXT';
-    process 'tr>td>table[width="410"]>tr>td>table>tr>td[valign="middle"]',
-      'images[]' => $scraper{images};
-    result qw( time subject description images );
-  };
-
   $scraper{diary} = scraper {
-    process 'td[width="540"]>table[bgcolor="#F8A448"]>tr>td[colspan="2"]>table[cellpadding="3"]',
-      diary => $scraper{diary_body};
-    result qw( diary );
+    process 'div.viewDiaryBox>div.listDiaryTitle>dl>dd',
+      time => 'TEXT';
+    process 'div.viewDiaryBox>div.listDiaryTitle>dl>dt',
+      subject => 'TEXT';
+    process 'div.viewDiaryBox>div.listDiaryTitle>dl>dt>span',
+      string => 'TEXT';
+    process 'div#diary_body',
+      description => 'TEXT';
+    process 'div.diaryPhoto>table>tr>td',
+      'images[]' => $scraper{images};
+    process 'div#localNavigation>ul.localNaviHome>li.top>a',
+      mylink => '@href';
+    process 'div#localNavigation>ul.localNaviFriend>li.top>a',
+      link => '@href';
+    result qw( time subject description images link mylink string );
   };
 
   my $stash = $self->post_process($scraper{diary}->scrape(\$html))->[0];
+  $stash->{link} ||= delete $stash->{mylink};
 
-  # XXX: this fails when you test with local files.
-  # However, this link cannot be extracted from the html,
-  # at least as of writing this. ugh.
-  $stash->{link} = $self->{uri};
+  my $string = delete $stash->{string} || '';
+  $stash->{subject} =~ s/$string$//;
 
   $scraper{comments} = scraper {
-    process 'tr',
-      string => 'TEXT';
-    process 'td[nowrap]',
+    process 'dl.commentList01>dt>span.commentTitleDate',
       time => 'TEXT';
-    process 'td[width="430"]>table[width="410"]>tr>td>a',
+    process 'dl.commentList01>dt>span.commentTitleName>a',
       link => '@href',
       name => 'TEXT';
-    process 'td[bgcolor="#ffffff"]>table[cellpadding="5"]>tr>td[class="h12"]',
+    process 'dl.commentList01>dd',
       description => 'TEXT';
-    result qw( string time link name description );
+    result qw( time link name description );
   };
 
   $scraper{list} = scraper {
-    process 'a[name="comment"]+table>tr>td[colspan="2"]>table[cellpadding="3"]>tr',
+    process 'div.diaryCommentbox',
       'comments[]' => $scraper{comments};
     result qw( comments );
   };
 
-  my $stash_c = $self->post_process($scraper{list}->scrape(\$html));
-
-  my $tmp;
-  my @comments;
-  foreach my $comment ( @{ $stash_c } ) {
-    next if !$comment->{string} || $comment->{string} =~ /^\s*$/s;
-    if ( $comment->{time} ) {  # meta
-      $tmp = {
-        time => $comment->{time},
-        name => $comment->{name},
-        link => $comment->{link},
-      };
-    }
-    else {  # body
-      $tmp->{description} = $comment->{description};
-      push @comments, $tmp;
-    }
-  }
-  $stash->{comments} = \@comments;
+  $stash->{comments} = $self->post_process($scraper{list}->scrape(\$html));
 
   return $stash;
 }

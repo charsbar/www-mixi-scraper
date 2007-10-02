@@ -23,54 +23,39 @@ sub scrape {
   };
 
   $scraper{diaries} = scraper {
-    process 'td[nowrap]',
+    process 'div.listDiaryTitle>dl>dd',
       time => 'TEXT';
-    process 'td[bgcolor="#FFF4E0"]>a',
+    process 'div.listDiaryTitle>dl>dt>a',
       link   => '@href',
       subject => 'TEXT';
-    process 'td[bgcolor="#FFFFFF"]>table[cellpadding="3"]>tr>td[class="h120"]',
+    process 'p',
       description => 'TEXT';
-    process 'td[bgcolor="#FFFFFF"]>table[cellpadding="3"]>tr>td[class="h120"]>table>tr>td>a>img',
+    process 'div.diaryPhoto>a>img',
       'images[]' => '@src';
-    process 'td[align="right"]>a',
+    process 'div.diaryEditMenu>ul>li',
       'meta[]' => $scraper{meta};
     result qw( time link subject description images meta );
   };
 
   $scraper{list} = scraper {
-    process 'table[width="525"]>tr',
+    process 'div.listDiaryBlock',
       'diaries[]' => $scraper{diaries};
     result qw( diaries );
   };
 
   my $stash = $self->post_process($scraper{list}->scrape(\$html));
 
-  my $tmp;
-  my @diaries;
-  foreach my $item ( @{ $stash } ) {
-    if ( $item->{time} ) {  # meta
-      $tmp = {
-        time    => $item->{time},
-        link    => $item->{link},
-        subject => $item->{subject},
-      };
-    }
-    elsif ( $item->{description} ) {
-      $tmp->{description} = $item->{description};
-      $tmp->{images}      = $item->{images};
-    }
-    elsif ( $item->{meta} ) {
-      foreach my $meta ( @{ $item->{meta} || [] } ) {
-        if ( ($meta->{href} || '') =~ /#(?:write|comment)$/ ) {
-          my ($count) = $meta->{text} =~ /\((\d+)\)/;
-          $tmp->{count} = $count;
-        }
+  foreach my $diary ( @{ $stash } ) {
+    my $meta = delete $diary->{meta};
+    foreach my $item ( @{ $meta || [] } ) {
+      if ( ($item->{href} || '') =~ /#(?:write|comment)$/ ) {
+        my ($count) = $item->{text} =~ /(\d+)/;
+        $diary->{count} = $count;
       }
-      push @diaries, $tmp;
     }
   }
 
-  return \@diaries;
+  return $stash;
 }
 
 1;

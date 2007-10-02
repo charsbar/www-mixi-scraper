@@ -124,11 +124,11 @@ sub matches {
     if ( $rule eq 'datetime' ) {
       _ok( $key, $item->{$key} );
       my $dt = $date_format->parse_datetime( $item->{$key} );
-      Test::More::ok defined $dt;
+      Test::More::ok defined $dt, 'proper datetime';
     }
     if ( $rule eq 'uri' ) {
       _ok( $key, $item->{$key} );
-      Test::More::ok ref $item->{$key} && $item->{$key}->isa('URI');
+      Test::More::ok ref $item->{$key} && $item->{$key}->isa('URI'), 'proper uri';
     }
     if ( ref $rule eq 'HASH' ) {
       if ( ref $item->{$key} eq 'ARRAY' ) {

@@ -3,6 +3,7 @@ package WWW::Mixi::Scraper::Plugin::ViewBBS;
 use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
+use WWW::Mixi::Scraper::Utils qw( _datetime _uri );
 
 validator {qw(
   id             is_number
@@ -24,65 +25,49 @@ sub scrape {
   };
 
   $scraper{topic} = scraper {
-    process 'table[bgcolor="#dfa473"]>tr>td[bgcolor="#ffd8b0"]',
+    process 'dl[class="bbsList01 bbsDetail"]>dt>span.date',
       time => 'TEXT';
-    process 'table[bgcolor="#dfa473"]>tr>td[bgcolor="#fff4e0"]',
+    process 'dl[class="bbsList01 bbsDetail"]>dt>span.titleSpan',
       subject => 'TEXT';
-    process 'table[bgcolor="#dfa473"]>tr>td[bgcolor="#fdf9f2"]>a',
+    process 'dd.bbsContent>dl>dt>a',
       name      => 'TEXT',
       name_link => '@href';
-    process 'table[bgcolor="#dfa473"]>tr>td[bgcolor="#ffffff"]>table[width="500"]>tr>td[class="h120"]',
+    process 'dd.bbsContent>dl>dd',
       description => 'TEXT';
-    process 'table[bgcolor="#dfa473"]>tr>td[bgcolor="#ffffff"]>table[width="500"]>tr>td[class="h120"]>table>tr>td[valign="middle"]',
+    process 'dd.bbsContent>dl>dd>div.communityPhoto>table>tr>td',
       'images[]' => $scraper{images};
-    result qw( time subject description name name_link images );
+    process 'div#localNavigation>ul.localNaviCommunity>li.top>a',
+      link => '@href';
+    result qw( time subject description name name_link images link );
   };
 
   # bbs topic is not an array
   my $stash = $self->post_process($scraper{topic}->scrape(\$html))->[0];
 
-  # XXX: this fails when you test with local files.
-  # However, this link cannot be extracted from the html,
-  # at least as of writing this. ugh.
-  $stash->{link} = $self->{uri};
-
   $scraper{comments} = scraper {
-    process 'tr',
-      string => 'TEXT';
-    process 'tr[valign="top"]>td[nowrap]',
-      time => 'TEXT';
-    process 'tr[valign="top"]>td[bgcolor="#fdf9f2"]>a',
+    process 'dt>a',
       link => '@href',
       name => 'TEXT';
-    process 'td[bgcolor="#ffffff"]>table[cellpadding="5"]>tr>td[class="h120"]',
+    process 'dd',
       description => 'TEXT';
-    result qw( string time link name description );
+    result qw( link name description );
   };
 
   $scraper{list} = scraper {
-    process 'table[cellpadding="3"]>tr',
+    process 'dl.commentList01>dt[class="commentDate clearfix"]>span.date',
+      'times[]' => 'TEXT';
+    process 'dl.commentList01>dd>dl.commentContent01',
       'comments[]' => $scraper{comments};
-    result qw( comments );
+    result qw( times comments );
   };
 
-  my $stash_c = $self->post_process($scraper{list}->scrape(\$html));
+  my $stash_c = $self->post_process($scraper{list}->scrape(\$html))->[0];
 
-  my $tmp;
-  my @comments;
-  foreach my $comment ( @{ $stash_c } ) {
-    next if !$comment->{string} || $comment->{string} =~ /^\s*$/s;
-    if ( $comment->{time} ) {  # meta
-      $tmp = {
-        time => $comment->{time},
-        name => $comment->{name},
-        link => $comment->{link},
-      };
-    }
-    elsif ( $comment->{description} && $tmp->{time} ) {  # body
-      $tmp->{description} = $comment->{description};
-      push @comments, $tmp;
-      $tmp = {};
-    }
+  my @comments = @{ $stash_c->{comments} || [] };
+  my @times    = @{ $stash_c->{times} || [] };
+  foreach my $comment ( @comments ) {
+    $comment->{time} = _datetime( shift @times );
+    $comment->{link} = _uri( $comment->{link} );
   }
   $stash->{comments} = \@comments;
 

@@ -50,7 +50,7 @@ my $rules = {
 
 date_format('%Y-%m-%d %H:%M');
 
-run_tests('view_event') or ok 'ignored';
+run_tests('view_event') or ok 1, 'skipped: no tests';
 
 sub test {
   my $event = $mixi->view_event->parse(@_);

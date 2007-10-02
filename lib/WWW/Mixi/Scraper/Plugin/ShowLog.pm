@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
 
+validator {( page => 'is_number' )};
+
 sub scrape {
   my ($self, $html) = @_;
 
@@ -23,7 +25,13 @@ sub scrape {
     result qw( logs );
   };
 
-  return $self->post_process($scraper{list}->scrape(\$html));
+  return $self->post_process($scraper{list}->scrape(\$html), \&_callback);
+}
+
+sub _callback {
+  my $item  = shift;
+  my @parts = split /\s/, ($item->{time} || ''), 3;
+  $item->{time} = join ' ', @parts[0..1];
 }
 
 1;

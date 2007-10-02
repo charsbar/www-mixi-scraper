@@ -16,12 +16,12 @@ my $rules = {
 
 # date_format('%m-%d');
 
-run_tests('list_message') or ok 'ignored';
+run_tests('list_message') or ok 1, 'skipped: no tests';
 
 sub test {
   my @items = $mixi->list_message->parse(@_) ;
 
-  return ok 'skipped: no messages' unless @items;
+  return ok 1, 'skipped: no messages' unless @items;
 
   foreach my $item ( @items ) {
     matches( $item => $rules );

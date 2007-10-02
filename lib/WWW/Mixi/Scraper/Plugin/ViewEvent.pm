@@ -3,6 +3,7 @@ package WWW::Mixi::Scraper::Plugin::ViewEvent;
 use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
+use WWW::Mixi::Scraper::Utils qw( _uri _datetime );
 use utf8;
 
 validator {qw(
@@ -23,63 +24,58 @@ sub scrape {
     result qw( link thumb_link );
   };
 
-  $scraper{topic} = scraper {
-    process 'td[rowspan]',
-      'time' => 'TEXT';
-    process 'td[nowrap]',
-      'name' => 'TEXT';
-    process 'td:not([align])',
-      'string' => 'TEXT';
-    process 'td:not([rowspan])>a',
-      'link' => '@href';
-    process 'td[colspan="2"]>table>tr>td[valign="middle"]',
-      'images[]' => $scraper{images};
-    result qw( time name string link images );
+  $scraper{infos} = scraper {
+    process 'dt',
+      name => 'TEXT';
+    process 'dd',
+      string => 'TEXT';
+    process 'dd>a',
+      link    => '@href',
+      subject => 'TEXT';
+    result qw( name string link subject );
   };
 
-  $scraper{table} = scraper {
-    process 'table[bgcolor="#F8A448"]>tr>td[colspan="2"]>table[width="630"]>tr',
-      'topic[]' => $scraper{topic};
-    result qw( topic );
+  $scraper{topic} = scraper {
+    process 'dl.bbsList01>dt>span.date',
+      'time' => 'TEXT';
+    process 'dl.bbsList01>dt[class="bbsTitle clearfix"]>span.titleSpan',
+      'subject' => 'TEXT';
+    process 'dd.bbsContent>dl>dt>a',
+      'name'      => 'TEXT',
+      'name_link' => '@href';
+    process 'dd.bbsContent>dl>dd',
+      'description' => 'TEXT';
+    process 'div.communityPhoto>table>tr>td',
+      'images[]' => $scraper{images};
+    process 'dl.bbsList01>dd.bbsInfo>dl',
+      'infos[]' => $scraper{infos};
+    result qw( time subject name name_link images infos description );
   };
 
   $scraper{comment_body} = scraper {
-    process 'td[rowspan]',
-      'time' => 'TEXT';
-    process 'td[bgcolor="#FDF9F2"]>font>b',
-      'subject' => 'TEXT';
-    process 'td[bgcolor="#FDF9F2"]>a',
+    process 'dl.commentContent01>dt>a',
       'link' => '@href',
       'name' => 'TEXT';
-    process 'td[bgcolor="#FFFFFF"]>table>tr>td[width="500"]',
+    process 'dl.commentContent01>dd',
       'description' => 'TEXT';
-    process 'td[bgcolor="#FFFFFF"]>table>tr>td[width="500"]>table>tr>td[valign="middle"]',
+    process 'dl.commentContent01>dd>table>tr>td',
       'images[]' => $scraper{images};
-    result qw( time name link subject description images );
+    result qw( link name description images );
   };
 
   $scraper{comment} = scraper {
-    process 'table[bgcolor="#DFB479"]>tr>td>table[width="630"]>tr',
+    process 'dl.commentList01>dt>span.date',
+      'dates[]' => 'TEXT';
+    process 'dl.commentList01>dt>span.senderId',
+      'sender_ids[]' => 'TEXT';
+    process 'dl.commentList01>dd',
       'comments[]' => $scraper{comment_body};
-    result 'comments';
+    result qw( dates comments sender_ids );
   };
 
-  my $stash = {};
-  my $items = $self->post_process($scraper{table}->scrape(\$html));
+  my $stash = $self->post_process($scraper{topic}->scrape(\$html))->[0];
 
-  foreach my $item (@{ $items || [] }) {
-    if ( $item->{time} ) {
-      $stash->{time} = $item->{time};
-    }
-    if ( $item->{images} ) {
-      $stash->{images} = $item->{images};
-    }
-
-    next unless $item->{name};
-
-    if ( $item->{name} eq 'タイトル' ) {
-      $stash->{subject} = $item->{string};
-    }
+  foreach my $item (@{ $stash->{infos} || [] }) {
     if ( $item->{name} eq '開催日時' ) {
       $stash->{date} = $item->{string};
     }
@@ -89,22 +85,10 @@ sub scrape {
     if ( $item->{name} eq '開催場所' ) {
       $stash->{location} = $item->{string};
     }
-    if ( $item->{name} eq '詳細' ) {
-      $stash->{description} = $item->{string};
-    }
-    if ( $item->{name} eq '企画者' ) {
-      $stash->{name}      = $item->{string};
-      $stash->{name_link} = $item->{link};
-    }
     if ( $item->{name} eq '参加者' ) {
-      my ($count, $subject) = $item->{string} =~ /(\d+人)\s+(\S+)/;
-      $stash->{list}->{count}   = $count;
-      $stash->{list}->{link}    = $item->{link};
-      $stash->{list}->{subject} = $subject;
-    }
-    if ( $item->{name} eq '関連コミュニティ' ) {
-      $stash->{community}->{name} = $item->{string};
-      $stash->{community}->{link} = $item->{link};
+      $stash->{list}->{count}   = $item->{string};
+      $stash->{list}->{link}    = _uri( $item->{link} );
+      $stash->{list}->{subject} = $item->{subject};
     }
   }
 
@@ -113,27 +97,24 @@ sub scrape {
   # at least as of writing this. ugh.
   $stash->{link} = $self->{uri};
 
-  my $stash_c = $self->post_process($scraper{comment}->scrape(\$html));
+  my $stash_c = $self->post_process($scraper{comment}->scrape(\$html))->[0];
 
-  my $tmp;
-  my @comments;
-  foreach my $comment (@{ $stash_c || [] }) {
-    next if !$comment->{description} && !$comment->{time};
-    if ( $comment->{time} ) { # meta
-      $tmp = {
-        time    => $comment->{time},
-        name    => $comment->{name},
-        subject => $comment->{subject},
-        link    => $comment->{link},
-      };
-    }
-    if ( $comment->{description} ) {
-      $tmp->{description} = $comment->{description};
-      $tmp->{images}      = $comment->{images};
-      push @comments, $tmp;
-      $tmp = {};
+  my @dates      = @{ $stash_c->{dates} || [] };
+  my @sender_ids = @{ $stash_c->{sender_ids} || [] };
+  my @comments   = @{ $stash_c->{comments} || [] };
+  foreach my $comment ( @comments ) {
+    $comment->{time}    = _datetime( shift @dates );
+    $comment->{subject} = shift @sender_ids;
+    $comment->{link}    = _uri( $comment->{link} );
+
+    if ( $comment->{images} ) {
+      foreach my $image ( @{ $comment->{images} || [] } ) {
+        $image->{link}       = _uri( $image->{link} );
+        $image->{thumb_link} = _uri( $image->{thumb_link} );
+      }
     }
   }
+
   $stash->{comments} = \@comments;
 
   return $stash;
