@@ -44,7 +44,7 @@ sub scrape {
       'name'      => 'TEXT',
       'name_link' => '@href';
     process 'dd.bbsContent>dl>dd',
-      'description' => 'TEXT';
+      'description' => $self->html_or_text;
     process 'div.communityPhoto>table>tr>td',
       'images[]' => $scraper{images};
     process 'dl.bbsList01>dd.bbsInfo>dl',
@@ -57,7 +57,7 @@ sub scrape {
       'link' => '@href',
       'name' => 'TEXT';
     process 'dl.commentContent01>dd',
-      'description' => 'TEXT';
+      'description' => $self->html_or_text;
     process 'dl.commentContent01>dd>table>tr>td',
       'images[]' => $scraper{images};
     result qw( link name description images );

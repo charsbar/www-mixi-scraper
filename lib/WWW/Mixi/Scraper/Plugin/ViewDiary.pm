@@ -29,7 +29,7 @@ sub scrape {
     process 'div.viewDiaryBox>div.listDiaryTitle>dl>dt>span',
       string => 'TEXT';
     process 'div#diary_body',
-      description => 'TEXT';
+      description => $self->html_or_text;
     process 'div.diaryPhoto>table>tr>td',
       'images[]' => $scraper{images};
     process 'div#localNavigation>ul.localNaviHome>li.top>a',
@@ -52,7 +52,7 @@ sub scrape {
       link => '@href',
       name => 'TEXT';
     process 'dl.commentList01>dd',
-      description => 'TEXT';
+      description => $self->html_or_text;
     result qw( time link name description );
   };
 

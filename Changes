@@ -1,5 +1,13 @@
 Revision history for WWW-Mixi-Scraper
 
+0.08  2007/10/06
+  - changed Web::Scraper's rendering option to 'HTML' for some
+    of the longer texts (diary body, comment body, bbs/event
+    description, friend's profile).
+  - removed a hackery which ripped <br> tags before scraping.
+    (thanks to otsune for both above)
+  - bumped up the version requirement of Web::Scraper to 0.17.
+
 0.07  2007/10/02
   - scraping rules are totally refactored due to the mixi's renewal.
     now it uses id/class attributes everywhere, so scraping is much

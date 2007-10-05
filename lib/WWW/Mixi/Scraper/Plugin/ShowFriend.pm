@@ -25,7 +25,7 @@ sub _scrape_profile {
     process 'dl>dt',
       key => 'TEXT';
     process 'dl>dd',
-      value => 'TEXT';
+      value => $self->html_or_text;
     result qw( key value );
   };
 

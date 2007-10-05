@@ -33,7 +33,7 @@ sub scrape {
       name      => 'TEXT',
       name_link => '@href';
     process 'dd.bbsContent>dl>dd',
-      description => 'TEXT';
+      description => $self->html_or_text;
     process 'dd.bbsContent>dl>dd>div.communityPhoto>table>tr>td',
       'images[]' => $scraper{images};
     process 'div#localNavigation>ul.localNaviCommunity>li.top>a',
@@ -49,7 +49,7 @@ sub scrape {
       link => '@href',
       name => 'TEXT';
     process 'dd',
-      description => 'TEXT';
+      description => $self->html_or_text;
     result qw( link name description );
   };
 

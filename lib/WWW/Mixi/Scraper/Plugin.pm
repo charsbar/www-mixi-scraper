@@ -15,7 +15,7 @@ sub import {
     scraper process process_first result
     get_content post_process
     validator build_uri
-    _extract_name
+    html_or_text _extract_name
   );
 
   no strict 'refs';
@@ -29,6 +29,8 @@ sub new {
 
   bless \%options, $class;
 }
+
+sub html_or_text { shift->{mode} || 'HTML' }
 
 sub parse {
   my $self = shift;
@@ -51,7 +53,7 @@ sub get_content {
   die "no content" unless $content;
 
   # XXX: preserve some tags like <br>?
-  $content =~ s/<br(\s[^>]*)?>/\n/g; # at least preserve as a space
+  # $content =~ s/<br(\s[^>]*)?>/\n/g; # at least preserve as a space
   $content =~ s/&nbsp;/ /g;          # as it'd be converted as '?'
 
   return $content;
@@ -198,8 +200,12 @@ WWW::Mixi::Scraper::Plugin - base class for plugins
       my %scraper;
       $scraper{...} = scraper {
         process '...',
-          text => 'TEXT';
-        result 'text';
+          text => 'TEXT';  # always plain text
+        process '...',
+          text => 'HTML';  # always HTML
+        process '...',
+          depends => $self->html_or_text; # HTML or TEXT
+        result qw( text depends );
       };
 
       return $self->post_process($scraper{...}->scrape(\$html));
@@ -218,6 +224,10 @@ This is a base class for WWW::Mixi::Scraper plugins. You don't need to C<use bas
 =head2 new
 
 creates an object.
+
+=head2 html_or_text
+
+returns the rendering mode of choice ('TEXT' or 'HTML').
 
 =head2 parse
 

@@ -63,6 +63,7 @@ sub login_to {
     email      => $conf->{global}->{email},
     password   => $conf->{global}->{password},
     cookie_jar => $cookie_jar,
+    mode       => $conf->{global}->{mode},
   );
 }
 

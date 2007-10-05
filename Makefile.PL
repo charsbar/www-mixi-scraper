@@ -15,7 +15,7 @@ WriteMakefile(
     'Time::HiRes' => 0,
     'URI' => 0,
     'URI::QueryParam' => 0,
-    'Web::Scraper' => 0,
+    'Web::Scraper' => '0.17',
     'WWW::Mechanize' => '1.30',
     'WWW::Mechanize::DecodedContent' => 0,
   },

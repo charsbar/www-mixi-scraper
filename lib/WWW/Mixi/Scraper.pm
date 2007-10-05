@@ -3,7 +3,7 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use String::CamelCase qw( decamelize );
 use Module::Pluggable::Fast
@@ -14,14 +14,17 @@ use WWW::Mixi::Scraper::Mech;
 use WWW::Mixi::Scraper::Utils qw( _uri );
 
 sub new {
-  my $class = shift;
+  my ($class, %options) = @_;
 
-  my $mech = WWW::Mixi::Scraper::Mech->new(@_);
+  my $mode = delete $options{mode};
+     $mode = ( $mode && uc $mode eq 'TEXT' ) ? 'TEXT' : 'HTML';
+
+  my $mech = WWW::Mixi::Scraper::Mech->new(%options);
 
   my $self = bless { mech => $mech }, $class;
 
   no strict 'refs';
-  foreach my $plugin ( $class->plugins( mech => $mech ) ) {
+  foreach my $plugin ( $class->plugins( mech => $mech, mode => $mode ) ) {
     my ($name) = decamelize(ref $plugin) =~ /(\w+)$/;
     $self->{$name} = $plugin;
     *{"$class\::$name"} = sub { shift->{$name} };
@@ -63,7 +66,8 @@ WWW::Mixi::Scraper - yet another mixi scraper
 
     use WWW::Mixi::Scraper;
     my $mixi = WWW::Mixi::Scraper->new(
-      email => 'foo@bar.com', password => 'password'
+      email => 'foo@bar.com', password => 'password',
+      mode  => 'TEXT'
     );
 
     my @list = $mixi->parse('http://mixi.jp/new_friend_diary.pl');
@@ -107,6 +111,10 @@ creates an object. You can pass an optional hash. Important keys are:
 =item email, password
 
 the ones you use to login.
+
+=item mode
+
+WWW::Mixi::Scraper has changed its policy since 0.08, and now it returns raw HTML for some of the longer texts like user's profile or diary body by default. However, this may cause various kind of problems. If you don't like HTML output, set this 'mode' option to 'TEXT', then it returns pre-processed texts as before.
 
 =item cookie_jar
 
