@@ -11,12 +11,14 @@ my $rules = {
   description => 'string',
   time        => 'datetime',
   name_link   => 'uri',
-  link        => 'uri',
+  link        => 'uri_if_remote',
   comments => {
+    subject     => 'string',
     name        => 'string',
+    name_link   => 'uri',
     description => 'string',
     time        => 'datetime',
-    link        => 'uri',
+    link        => 'uri_if_remote',
   },
   images => {
     link       => 'uri',

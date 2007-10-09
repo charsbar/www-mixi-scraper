@@ -1,5 +1,19 @@
 Revision history for WWW-Mixi-Scraper
 
+0.09  2007/10/09
+  - the content of the comment 'link' of ViewBBS/ViewEvent,
+    which was commenter's profile uri, is now stored in the
+    newly created 'name_link'. And the 'link' now denotes
+    pseudo permanent uri of the comment to make plagger/rss
+    readers happier. Note that this is *incompatible* with
+    WWW::Mixi.
+  - now ViewBBS's comments have their comment numbers in
+    'subject' (this also is incompatible with WWW::Mixi;
+    thanks to false at www.wizard-limit.net).
+
+not the commenter's
+    profile uri but pseudo permanent link for the comment.
+
 0.08  2007/10/06
   - changed Web::Scraper's rendering option to 'HTML' for some
     of the longer texts (diary body, comment body, bbs/event

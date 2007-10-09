@@ -54,13 +54,13 @@ sub scrape {
 
   $scraper{comment_body} = scraper {
     process 'dl.commentContent01>dt>a',
-      'link' => '@href',
-      'name' => 'TEXT';
+      'name_link' => '@href',
+      'name'      => 'TEXT';
     process 'dl.commentContent01>dd',
       'description' => $self->html_or_text;
     process 'dl.commentContent01>dd>table>tr>td',
       'images[]' => $scraper{images};
-    result qw( link name description images );
+    result qw( name_link name description images );
   };
 
   $scraper{comment} = scraper {
@@ -103,9 +103,15 @@ sub scrape {
   my @sender_ids = @{ $stash_c->{sender_ids} || [] };
   my @comments   = @{ $stash_c->{comments} || [] };
   foreach my $comment ( @comments ) {
-    $comment->{time}    = _datetime( shift @dates );
-    $comment->{subject} = shift @sender_ids;
-    $comment->{link}    = _uri( $comment->{link} );
+    $comment->{time}      = _datetime( shift @dates );
+    $comment->{subject}   = shift @sender_ids;
+
+    # incompatible with WWW::Mixi to let comment links
+    # look more 'permanent' to make plagger/rss readers happier
+    $comment->{name_link} = _uri( $comment->{name_link} );
+    $comment->{link}      = $stash->{link}
+      ? _uri( $stash->{link} . '#' . $comment->{subject} )
+      : undef;
 
     if ( $comment->{images} ) {
       foreach my $image ( @{ $comment->{images} || [] } ) {
@@ -155,10 +161,11 @@ returns a hash reference such as
     },
     comments => [
       {
-        subject => 1,
-        name => 'commenter',
-        link => 'http://mixi.jp/show_friend.pl?id=xxxx',
-        time => 'yyyy-mm-dd hh:mm',
+        subject     => 1,
+        name        => 'commenter',
+        name_link   => 'http://mixi.jp/show_friend.pl?id=xxxx',
+        link        => 'http://mixi.jp/view_event.pl?id=xxxx#1',
+        time        => 'yyyy-mm-dd hh:mm',
         description => 'comment body',
       }
     ]

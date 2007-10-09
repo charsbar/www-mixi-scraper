@@ -36,13 +36,16 @@ sub scrape {
       description => $self->html_or_text;
     process 'dd.bbsContent>dl>dd>div.communityPhoto>table>tr>td',
       'images[]' => $scraper{images};
-    process 'div#localNavigation>ul.localNaviCommunity>li.top>a',
-      link => '@href';
     result qw( time subject description name name_link images link );
   };
 
   # bbs topic is not an array
   my $stash = $self->post_process($scraper{topic}->scrape(\$html))->[0];
+
+  # XXX: this fails when you test with local files.
+  # However, this link cannot be extracted from the html,
+  # at least as of writing this. ugh.
+  $stash->{link} = $self->{uri};
 
   $scraper{comments} = scraper {
     process 'dt>a',
@@ -56,18 +59,28 @@ sub scrape {
   $scraper{list} = scraper {
     process 'dl.commentList01>dt[class="commentDate clearfix"]>span.date',
       'times[]' => 'TEXT';
+    process 'dl.commentList01>dt[class="commentDate clearfix"]>span.senderId',
+      'sender_ids[]' => 'TEXT';
     process 'dl.commentList01>dd>dl.commentContent01',
       'comments[]' => $scraper{comments};
-    result qw( times comments );
+    result qw( times sender_ids comments );
   };
 
   my $stash_c = $self->post_process($scraper{list}->scrape(\$html))->[0];
 
-  my @comments = @{ $stash_c->{comments} || [] };
-  my @times    = @{ $stash_c->{times} || [] };
+  my @comments   = @{ $stash_c->{comments} || [] };
+  my @times      = @{ $stash_c->{times} || [] };
+  my @sender_ids = @{ $stash_c->{sender_ids} || [] };
   foreach my $comment ( @comments ) {
-    $comment->{time} = _datetime( shift @times );
-    $comment->{link} = _uri( $comment->{link} );
+    $comment->{time}      = _datetime( shift @times );
+    $comment->{subject}   = shift @sender_ids;
+
+    # incompatible with WWW::Mixi to let comment links
+    # look more 'permanent' to make plagger/rss readers happier
+    $comment->{name_link} = _uri( $comment->{link} );
+    $comment->{link}      = $stash->{link}
+      ? _uri( $stash->{link} . '#' . $comment->{subject} )
+      : undef;
   }
   $stash->{comments} = \@comments;
 
@@ -107,9 +120,11 @@ returns a hash reference such as
     ],
     comments => [
       {
-        name => 'commenter',
-        link => 'http://mixi.jp/show_friend.pl?id=xxxx',
-        time => 'yyyy-mm-dd hh:mm',
+        subject   => 1,
+        name      => 'commenter',
+        name_link => 'http://mixi.jp/show_friend.pl?id=xxxx',
+        link      => 'http://mixi.jp/view_bbs.pl?id=xxxx#1',
+        time      => 'yyyy-mm-dd hh:mm',
         description => 'comment body',
       },
     ]
