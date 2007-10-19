@@ -42,7 +42,7 @@ sub scrape {
   };
 
   $scraper{list} = scraper {
-    process 'td[height=65]',
+    process 'table.calendarTable01>tr>td',
       'string[]' => $scraper{day};
     result qw( string );
   };
