@@ -27,6 +27,7 @@ sub new {
   foreach my $plugin ( $class->plugins( mech => $mech, mode => $mode ) ) {
     my ($name) = decamelize(ref $plugin) =~ /(\w+)$/;
     $self->{$name} = $plugin;
+    no warnings qw(redefine);
     *{"$class\::$name"} = sub { shift->{$name} };
   }
 
