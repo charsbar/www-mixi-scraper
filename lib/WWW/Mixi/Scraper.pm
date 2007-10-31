@@ -23,11 +23,11 @@ sub new {
 
   my $self = bless { mech => $mech }, $class;
 
-  no strict 'refs';
+  no strict   'refs';
+  no warnings 'redefine';
   foreach my $plugin ( $class->plugins( mech => $mech, mode => $mode ) ) {
     my ($name) = decamelize(ref $plugin) =~ /(\w+)$/;
     $self->{$name} = $plugin;
-    no warnings qw(redefine);
     *{"$class\::$name"} = sub { shift->{$name} };
   }
 

@@ -18,7 +18,8 @@ sub import {
     html_or_text _extract_name
   );
 
-  no strict 'refs';
+  no strict   'refs';
+  no warnings 'redefine';
   foreach my $sub ( @subs ) {
     *{"$pkg\::$sub"} = *{"$class\::$sub"};
   }
@@ -103,7 +104,8 @@ sub validator ($) {
     }
   }
 
-  no strict 'refs';
+  no strict   'refs';
+  no warnings 'redefine';
   *{"$pkg\::_is_valid"} = sub { return $rules{$_[1]} && $rules{$_[1]}->($_[2]) };
 }
 
