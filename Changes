@@ -2,6 +2,7 @@ Revision history for WWW-Mixi-Scraper
 
 0.11  not yet released
   - suppress redefine warnings (thanks to yugui)
+  - increased wait
 
 0.10  2007/10/21
   - mixi has slightly changed html/css for show_calendar.pl

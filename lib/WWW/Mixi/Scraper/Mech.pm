@@ -35,7 +35,7 @@ sub new {
 sub login {
   my $self = shift;
 
-  sleep(0.1); # intentional delay not to access too frequently
+  sleep(1.0); # intentional delay not to access too frequently
 
   $self->{mech}->post( 'http://mixi.jp/login.pl' => $self->{login} );
 
@@ -71,7 +71,7 @@ sub get {
 
   $uri = _uri($uri) unless ref $uri eq 'URI';
 
-  sleep(0.1); # intentional delay not to access too frequently
+  sleep(1.0); # intentional delay not to access too frequently
 
   $self->{mech}->get($uri);
 
