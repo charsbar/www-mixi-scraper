@@ -57,7 +57,7 @@ sub scrape {
   };
 
   $scraper{list} = scraper {
-    process 'div.diaryCommentbox',
+    process 'div.diaryCommentbox,div.diaryCommentboxLast',
       'comments[]' => $scraper{comments};
     result qw( comments );
   };
