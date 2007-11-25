@@ -1,7 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
-0.11  not yet released
+0.11  2007/11/26
   - suppress redefine warnings (thanks to yugui)
+  - last comment in view_diary was missing
+    (thanks to anemo and miyagawa)
   - increased wait
 
 0.10  2007/10/21
