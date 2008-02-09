@@ -1,5 +1,12 @@
 Revision history for WWW-Mixi-Scraper
 
+0.12  2008/02/10
+  - fixed typo in t_live/new_music.t (thanks to drry)
+  - mixi seems to have changed new_music's datetime format.
+    fixed its live test.
+  - added Exporter dependency to export several internal functions
+    (5.10 dies without it; thanks to tokuhirom)
+
 0.11  2007/11/26
   - suppress redefine warnings (thanks to yugui)
   - last comment in view_diary was missing

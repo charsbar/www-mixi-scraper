@@ -9,6 +9,7 @@ WriteMakefile(
   ABSTRACT_FROM  => 'lib/WWW/Mixi/Scraper.pm',
   PREREQ_PM => {
     'Encode' => 0,
+    'Exporter' => 0,
     'Module::Pluggable::Fast' => 0,
     'String::CamelCase' => 0,
     'Test::UseAllModules' => 0,
