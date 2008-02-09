@@ -12,7 +12,7 @@ my $rules = {
   link    => 'uri',
 };
 
-date_format('%Y-%m-%d %H:%M');
+date_format('%Y-%m-%d');
 
 run_tests('new_music') or ok 1, 'skipped: no tests';
 
