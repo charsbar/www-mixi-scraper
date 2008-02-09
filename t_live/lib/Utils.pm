@@ -2,6 +2,7 @@ package t_live::lib::Utils;
 
 use strict;
 use warnings;
+use base qw/Exporter/;
 use WWW::Mixi::Scraper;
 use Encode;
 use DateTime::Format::Strptime;
