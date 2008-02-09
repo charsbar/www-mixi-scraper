@@ -2,6 +2,7 @@ package WWW::Mixi::Scraper::Utils;
 
 use strict;
 use warnings;
+use base qw/Exporter/;
 use URI;
 use URI::QueryParam;
 
