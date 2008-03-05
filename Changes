@@ -1,5 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
+0.13  2008/03/05
+  - no significant code changes
+  - hid t_live::lib::Utils from PAUSE
+
 0.12  2008/02/10
   - fixed typo in t_live/new_music.t (thanks to drry)
   - mixi seems to have changed new_music's datetime format.
@@ -27,9 +31,6 @@ Revision history for WWW-Mixi-Scraper
   - now ViewBBS's comments have their comment numbers in
     'subject' (this also is incompatible with WWW::Mixi;
     thanks to false at www.wizard-limit.net).
-
-not the commenter's
-    profile uri but pseudo permanent link for the comment.
 
 0.08  2007/10/06
   - changed Web::Scraper's rendering option to 'HTML' for some

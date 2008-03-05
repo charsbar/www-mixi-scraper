@@ -1,4 +1,5 @@
-package t_live::lib::Utils;
+package # hide from PAUSE
+  t_live::lib::Utils;
 
 use strict;
 use warnings;
