@@ -23,16 +23,17 @@ sub scrape {
 
   my %scraper;
   $scraper{ym} = scraper {
-    process '#calendarBox>div.heading02>h3',
+    process 'div#calendarBox>div.heading02>h3',
       ym => 'TEXT';
     result qw( ym );
   };
   my $ym = $scraper{ym}->scrape(\$html);
+
   my ($year, $month) = $ym =~ /^(\d{4})\D+(\d{1,2})/;
 
   $scraper{day} = scraper {
-    process '.',
-      day => 'TEXT'; # TODO: fixme. I hope exclude <p> and <ul> node.
+    process 'td',
+      day => sub { $_->content and $_->content->[0] };
     process 'ul>li',
       'icons[]' => sub{
          $_->parent()->attr('class') eq 'birthday' ?
