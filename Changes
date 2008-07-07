@@ -1,5 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
+0.15  2008/07/07
+  - mixi renewed its navigation bar, which affected view_diary's
+    main link. fixed its scraping rule.
+
 0.14  2008/06/04
   - mixi seems to have changed show_calendar format
     fixed scraping rules (thanks to otsune)

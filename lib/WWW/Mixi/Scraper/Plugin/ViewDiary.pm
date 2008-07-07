@@ -32,9 +32,9 @@ sub scrape {
       description => $self->html_or_text;
     process 'div.diaryPhoto>table>tr>td',
       'images[]' => $scraper{images};
-    process 'div#localNavigation>ul.localNaviHome>li.top>a',
+    process 'div.personalNavigation01>ul.personalNaviHome>li.top>a',
       mylink => '@href';
-    process 'div#localNavigation>ul.localNaviFriend>li.top>a',
+    process 'div.personalNavigation01>ul.personalNaviFriend>li.top>a',
       link => '@href';
     result qw( time subject description images link mylink string );
   };
