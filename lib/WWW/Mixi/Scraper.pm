@@ -3,7 +3,7 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.15';
+our $VERSION = '0.17';
 
 use String::CamelCase qw( decamelize );
 use Module::Pluggable::Fast
@@ -95,11 +95,19 @@ WWW::Mixi::Scraper is also pluggable, so if you want to scrape something it can'
 
 =head1 DIFFERENCES BETWEEN TWO
 
-WWW::Mixi has much longer history and is full-stack. The data it returns tends to be more complete, fine-tuned, and raw in many ways (including encoding). However, it tends to suffer from minor html changes as it heavily relies on regexes, and maybe it is too monolithic.
+WWW::Mixi has much longer history and is full-stack. The data it returns tended to be more complete, fine-tuned, and raw in many ways (including encoding). However, it tended to suffer from minor html changes as it heavily relies on regexes, and as of writing this (July 2008), it's been broken for months due to a major cosmetic change of mixi in October, 2007.
 
-In contrast, WWW::Mixi::Scraper hopefully tends to survive minor html changes as it relies on XPath. And basically it uses decoded perl strings, not octets. It's smaller, and pluggable. However, its data is more or less pre-processed and tends to lose some aspects such as proper line breaks. Also, it may be easier to be polluted with garbages. And it may be harder to understand and maintain XPath rules.
+In contrast, WWW::Mixi::Scraper hopefully tends to survive minor html changes as it relies on XPath/CSS selectors. And basically it uses decoded perl strings, not octets. It's smaller, and pluggable. However, its data is more or less pre-processed and tends to lose some aspects such as proper line breaks. Also, it may be easier to be polluted with garbages. And it may be harder to understand and maintain scraping rules.
 
-Which to choose? It depends. For now, ::Scraper is too limited, but if all you want is rough data to tell you who updated, or what was updated, ::Scraper may be a good option.
+Anyway, though a bit limited, ::Scraper is the only practical option right now.
+
+=head1 IF YOU WANT MORE
+
+If you want more features, please send me a patch, or, preferably, commit a patch to the L<coderepos repository|http://coderepos.org/share/>. Just telling me where you want to scrape would be ok but it may take a longer time to implement especially when it's new or less popular and I don't have enough samples.
+
+=head1 ON Plagger::Plugin::CustomFeed::MixiScraper
+
+Usually you want to use this with L<Plagger>, but unfortunately, current CPAN version of Plagger (0.7.17) doesn't have the above plugin. You can always get the latest version of the plugin from L<Plagger's official repository|http://svn.bulknews.net/repos/plagger/trunk/plagger/lib/Plagger/Plugin/CustomFeed/MixiScraper.pm>. See L<Plagger's official site|http://plagger.org/> for instructions to update your Plagger and install extra plugins.
 
 =head1 METHODS
 
@@ -137,7 +145,7 @@ Anyway, as this is a 'scraper', I don't include 'post' related methods here. If 
 
 =head1 SEE ALSO
 
-L<WWW::Mixi>, L<Web::Scraper>, L<WWW::Mechanize>
+L<WWW::Mixi>, L<Web::Scraper>, L<WWW::Mechanize>, L<Plagger>
 
 =head1 AUTHOR
 

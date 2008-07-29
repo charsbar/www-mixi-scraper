@@ -2,6 +2,7 @@ Changes
 lib/WWW/Mixi/Scraper.pm
 lib/WWW/Mixi/Scraper/Mech.pm
 lib/WWW/Mixi/Scraper/Plugin.pm
+lib/WWW/Mixi/Scraper/Plugin/ListBookmark.pm
 lib/WWW/Mixi/Scraper/Plugin/ListComment.pm
 lib/WWW/Mixi/Scraper/Plugin/ListDiary.pm
 lib/WWW/Mixi/Scraper/Plugin/ListMessage.pm
@@ -25,6 +26,7 @@ t/00_load.t
 t/99_pod.t
 t/99_podcoverage.t
 t_live/lib/Utils.pm
+t_live/list_bookmark.t
 t_live/list_comment.t
 t_live/list_diary.t
 t_live/list_message.t

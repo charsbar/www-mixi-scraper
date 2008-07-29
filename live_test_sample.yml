@@ -5,6 +5,10 @@ global:
   test_html_dir: t_live/html
 
 tests:
+  list_bookmark:
+    - local: list_bookmark.html
+    - remote: -
+
   list_comment:
     - local: list_comment.html
     - remote: -

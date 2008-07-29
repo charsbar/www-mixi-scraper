@@ -1,5 +1,13 @@
 Revision history for WWW-Mixi-Scraper
 
+0.17  2008/07/29
+  - oops, forgot to add a live test for ListBookmark
+
+0.16  2008/07/29
+  - new plugin: ListBookmark (by Tomohiro Hosaka)
+  - added notes on Plagger::Plugin::CustomFeed::MixiScraper and
+    on sending me a patch.
+
 0.15  2008/07/07
   - mixi renewed its navigation bar, which affected view_diary's
     main link. fixed its scraping rule.
