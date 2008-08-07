@@ -11,7 +11,7 @@ sub scrape {
   my ($self, $html) = @_;
 
   my $scraper = scraper {
-    process 'tr.even>td.comment',
+    process 'div.archiveList>table>tr>td.comment',
       'recents[]' => scraper {
         process '//div[1]', id => 'HTML';
         process '//div[2]', time => 'HTML';
