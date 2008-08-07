@@ -1,4 +1,4 @@
-package WWW::Mixi::Scraper::Plugin::RecentEcho;
+package WWW::Mixi::Scraper::Plugin::ResEcho;
 
 use strict;
 use warnings;
@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-WWW::Mixi::Scraper::Plugin::RecentEcho
+WWW::Mixi::Scraper::Plugin::ResEcho
 
 =head1 DESCRIPTION
 
@@ -48,7 +48,7 @@ WWW::Mixi::Scraper::Plugin::RecentEcho
 returns an array reference of
 
   {
-    count   => 'num of recents',
+    count   => 'num of lists',
     recents  => [
       {
         link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
@@ -60,7 +60,7 @@ returns an array reference of
     ],
   }
 
-Recents may be a blank array reference.
+Recents may be an blank array reference.
 
 =head1 AUTHOR
 

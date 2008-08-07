@@ -65,3 +65,18 @@ tests:
   recent_echo:
     - local: recent_echo.html
     - remote: -
+
+  list_echo:
+    - local: list_echo.html
+    - remote: 
+        id: <id>
+
+  res_echo:
+    - local: res_echo.html
+    - remote: -
+
+  view_echo:
+    - local: view_echo.html
+    - remote: 
+        id: <id>
+        post_time: <post_time>
