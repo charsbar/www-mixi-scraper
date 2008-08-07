@@ -61,3 +61,7 @@ tests:
     - remote:
         id: <id>
         box: inbox
+
+  recent_echo:
+    - local: recent_echo.html
+    - remote: -
