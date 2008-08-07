@@ -60,7 +60,7 @@ returns an array reference of
     ],
   }
 
-Recents may be an blank array reference.
+Recents may be a blank array reference.
 
 =head1 AUTHOR
 

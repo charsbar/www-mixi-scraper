@@ -1,7 +1,8 @@
 Revision history for WWW-Mixi-Scraper
 
 0.18  not yet released
-  - new plugin: RecentEcho (by Kazuhiro Osawa)
+  - new plugins: ListEcho, RecentEcho, ResEcho, ViewEcho
+    (by Kazuhiro Osawa)
 
 0.17  2008/07/29
   - oops, forgot to add a live test for ListBookmark
