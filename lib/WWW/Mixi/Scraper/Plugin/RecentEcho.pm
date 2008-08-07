@@ -50,7 +50,7 @@ returns an array reference of
     count   => 'num of recents',
     recents  => [
       {
-        link    => 'http://mixi.jp/recent_echo.pl?id=xxxx&post_time=xxxx',
+        link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
         id      => 'xxxx',
         time    => 'yyyymmddhhmmss',
         name    => 'username',
