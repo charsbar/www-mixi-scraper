@@ -11,12 +11,13 @@ sub scrape {
   my ($self, $html) = @_;
 
   my $scraper = scraper {
-    process 'div.archiveList>table>tr>td.comment',
+    process 'div.archiveList>table>tr',
       'recents[]' => scraper {
-        process '//div[1]', id => 'HTML';
-        process '//div[2]', time => 'HTML';
-        process '//div[3]', name => 'HTML';
-        process '//div[4]', comment => 'HTML';
+        process '//td[@class="comment"]//div[1]', id => 'HTML';
+        process '//td[@class="comment"]//div[2]', time => 'HTML';
+        process '//td[@class="comment"]//div[3]', name => 'HTML';
+        process '//td[@class="comment"]//div[4]', comment => 'HTML';
+        process '//td[@class="thumb"]//img',      icon => '@src';
     };
   };
 
