@@ -5,30 +5,40 @@ use warnings;
 use WWW::Mixi::Scraper::Plugin;
 use URI;
 
-validator {( page => 'is_number' )};
+validator { ( page => 'is_number' ) };
 
 sub scrape {
-  my ($self, $html) = @_;
+    my ( $self, $html ) = @_;
 
-  my $scraper = scraper {
-    process 'div.archiveList>table>tr',
-      'recents[]' => scraper {
-        process '//td[@class="comment"]//div[1]', id => 'HTML';
-        process '//td[@class="comment"]//div[2]', time => 'HTML';
-        process '//td[@class="comment"]//div[3]', name => 'HTML';
-        process '//td[@class="comment"]//div[4]', comment => 'HTML';
-        process '//td[@class="thumb"]//img',      icon => '@src';
+    my $scraper = scraper {
+        process 'div.archiveList>table>tr', 'recents[]' => scraper {
+            process '//td[@class="comment"]//div[1]', id      => 'HTML';
+            process '//td[@class="comment"]//div[2]', time    => 'HTML';
+            process '//td[@class="comment"]//div[3]', name    => 'HTML';
+            process '//td[@class="comment"]//div[4]', comment => 'HTML';
+            process '//td[@class="thumb"]//img',      icon    => '@src';
+            process
+                '//td[@class="comment"]//a[starts-with(@href, "list_echo.pl")]',
+                reply_name => [ 'HTML', sub { (/&#62;&#62;(.+)/)[0] } ];
+            process
+                '//td[@class="comment"]//a[starts-with(@href, "list_echo.pl")]',
+                reply_id =>
+                [ '@href', sub { (/list_echo.pl\?id=(\d+)\&/)[0] } ];
+
+        };
     };
-  };
 
-  my $stash = $self->post_process($scraper->scrape(\$html));
-  my $data = $stash->[0] or return $stash;
-  $data->{count} = 0;
-  foreach my $echo ( @{ $data->{recents} } ) {
-      $data->{count}++;
-      $echo->{link} = URI->new("http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}");
-  }
-  return $stash;
+    my $stash = $self->post_process( $scraper->scrape( \$html ) );
+    my $data = $stash->[0] or return $stash;
+    $data->{count} = 0;
+    foreach my $echo ( @{ $data->{recents} } ) {
+        $data->{count}++;
+        $echo->{link}
+            = URI->new(
+            "http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}"
+            );
+    }
+    return $stash;
 }
 
 1;
@@ -52,11 +62,14 @@ returns an array reference of
     count   => 'num of recents',
     recents  => [
       {
-        link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
-        id      => 'xxxx',
-        time    => 'yyyymmddhhmmss',
-        name    => 'username',
-        comment => 'comment',
+        link       => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
+        id         => 'xxxx',
+        time       => 'yyyymmddhhmmss',
+        name       => 'username',
+        comment    => 'comment',
+        icon       => 'icon',
+        reply_name => 'username',
+        reply_id   => 'xxxx',
       },
     ],
   }
