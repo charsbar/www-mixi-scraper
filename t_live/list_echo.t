@@ -6,14 +6,11 @@ use t_live::lib::Utils;
 my $mixi = login_to('list_echo.pl');
 
 my $rules = {
-  count       => 'integer',
-  recents      => {
-    link       => 'uri', 
-    id         => 'integer',
-    time       => 'integer',
-    name       => 'string',
-    comment    => 'string',
-  },
+  link       => 'uri', 
+  id         => 'integer',
+  time       => 'integer',
+  name       => 'string',
+  comment    => 'string',
 };
 
 run_tests('list_echo') or ok 1, 'skipped: no tests';

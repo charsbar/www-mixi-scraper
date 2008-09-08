@@ -18,13 +18,11 @@ sub scrape {
         process '//div[3]', name => 'HTML';
         process '//div[4]', comment => 'HTML';
     };
+    result 'recents';
   };
 
   my $stash = $self->post_process($scraper->scrape(\$html));
-  my $data = $stash->[0] or return $stash;
-  $data->{count} = 0;
-  foreach my $echo ( @{ $data->{recents} } ) {
-      $data->{count}++;
+  foreach my $echo ( @{ $stash } ) {
       $echo->{link} = URI->new("http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}");
   }
   return $stash;

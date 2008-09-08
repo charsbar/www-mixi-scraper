@@ -16,11 +16,7 @@ my $rules = {
 run_tests('view_echo') or ok 1, 'skipped: no tests';
 
 sub test {
-  my @items = $mixi->view_echo->parse(@_);
+  my $echo = $mixi->view_echo->parse(@_);
 
-  return ok 1, 'skipped: no view echo' unless @items;
-
-  foreach my $item ( @items ) {
-    matches( $item => $rules );
-  }
+  matches( $echo => $rules );
 }

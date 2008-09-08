@@ -26,13 +26,14 @@ sub scrape {
                 [ '@href', sub { (/list_echo.pl\?id=(\d+)\&/)[0] } ];
 
         };
+        result 'recents';
     };
 
     my $stash = $self->post_process( $scraper->scrape( \$html ) );
-    my $data = $stash->[0] or return $stash;
-    $data->{count} = 0;
-    foreach my $echo ( @{ $data->{recents} } ) {
-        $data->{count}++;
+
+    foreach my $echo ( @{ $stash } ) {
+        $echo->{reply_id}   ||= '';
+        $echo->{reply_name} ||= '';
         $echo->{link}
             = URI->new(
             "http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}"
