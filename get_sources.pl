@@ -7,6 +7,7 @@ use HTTP::Cookies;
 use WWW::Mixi::Scraper;
 use Getopt::Long;
 use File::Path;
+use List::MoreUtils qw( none );
 
 GetOptions(\my %options => qw( force|f ));
 
@@ -31,6 +32,7 @@ if ( $conf->{global}->{test_html_dir}
 
 foreach my $plugin ( keys %{ $conf->{tests} } ) {
   my $ct = '';
+  next if @ARGV && none { $_ eq $plugin } @ARGV;
   foreach my $item ( @{ $conf->{tests}->{$plugin} || [] } ) {
     my $options = $item->{remote} || $item->{source} || next;
        $options = {} if $options eq '-';
