@@ -21,8 +21,9 @@ sub scrape {
   };
 
   my $stash = $self->post_process($scraper->scrape(\$html));
-  my $data = $stash->[0] or return $stash;
+  my $data = $stash->[0];
   $data->{count} = 0;
+  return $stash unless exists $data->{recents}->[0]->{id};
   foreach my $echo ( @{ $data->{recents} } ) {
       $data->{count}++;
       $echo->{link} = URI->new("http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}");
