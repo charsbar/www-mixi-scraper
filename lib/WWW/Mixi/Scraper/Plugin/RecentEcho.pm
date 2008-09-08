@@ -52,6 +52,8 @@ WWW::Mixi::Scraper::Plugin::RecentEcho
 
 =head1 DESCRIPTION
 
+This would be equivalent to WWW::Mixi->parse_recent_echo().
+(though the latter is not implemented yet as of writing this)
 
 =head1 METHOD
 
@@ -60,22 +62,17 @@ WWW::Mixi::Scraper::Plugin::RecentEcho
 returns an array reference of
 
   {
-    count   => 'num of recents',
-    recents  => [
-      {
-        link       => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
-        id         => 'xxxx',
-        time       => 'yyyymmddhhmmss',
-        name       => 'username',
-        comment    => 'comment',
-        icon       => 'icon',
-        reply_name => 'username',
-        reply_id   => 'xxxx',
-      },
-    ],
+    link       => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
+    id         => 'xxxx',
+    time       => 'yyyymmddhhmmss',
+    name       => 'username',
+    comment    => 'comment',
+    icon       => 'icon',
+    reply_name => 'username',
+    reply_id   => 'xxxx',
   }
 
-Recents may be a blank array reference.
+reply_name and reply_id may be blank.
 
 =head1 AUTHOR
 

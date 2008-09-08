@@ -33,12 +33,14 @@ WWW::Mixi::Scraper::Plugin::ViewEcho
 
 =head1 DESCRIPTION
 
+This would be equivalent to WWW::Mixi->parse_view_echo().
+(though the latter is not implemented yet as of writing this)
 
 =head1 METHOD
 
 =head2 scrape
 
-returns an hash reference of
+returns a hash reference of
 
   {
     link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',

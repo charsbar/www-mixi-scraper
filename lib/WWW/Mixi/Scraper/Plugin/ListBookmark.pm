@@ -62,6 +62,7 @@ returns an array reference of
     link       => 'http://mixi.jp/show_friend.pl?id=3755394',
     last_login => '5分以内'、
   }
+  }
 
 =head1 AUTHOR
 

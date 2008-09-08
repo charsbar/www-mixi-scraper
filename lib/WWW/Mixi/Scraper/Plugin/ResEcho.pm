@@ -38,6 +38,8 @@ WWW::Mixi::Scraper::Plugin::ResEcho
 
 =head1 DESCRIPTION
 
+This would be equivalent to WWW::Mixi->parse_res_echo().
+(though the latter is not implemented yet as of writing this)
 
 =head1 METHOD
 
@@ -46,19 +48,12 @@ WWW::Mixi::Scraper::Plugin::ResEcho
 returns an array reference of
 
   {
-    count   => 'num of lists',
-    recents  => [
-      {
-        link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
-        id      => 'xxxx',
-        time    => 'yyyymmddhhmmss',
-        name    => 'username',
-        comment => 'comment',
-      },
-    ],
+    link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
+    id      => 'xxxx',
+    time    => 'yyyymmddhhmmss',
+    name    => 'username',
+    comment => 'comment',
   }
-
-Recents may be a blank array reference.
 
 =head1 AUTHOR
 

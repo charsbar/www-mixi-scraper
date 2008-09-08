@@ -1,5 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
+0.19  2008/09/08
+  - oops, pods for echo stuff were stale,
+    and manifest was not updated. sorry.
+
 0.18  2008/09/08
   - new plugins: ListEcho, RecentEcho, ResEcho, ViewEcho
     (by Kazuhiro Osawa)
