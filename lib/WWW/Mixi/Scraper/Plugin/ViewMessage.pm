@@ -13,50 +13,29 @@ sub scrape {
   my ($self, $html) = @_;
 
   my %scraper;
-  $scraper{message_meta} = scraper {
-    process 'td[background]>a>img',
-      image => '@src';
-    process 'td[width="445"]>table[width="440"]>tr>td[align="left"]>a',
-      link => '@href',
-      name => 'TEXT';
-    process 'td[width="445"]>table[width="440"]>tr>td>input[name="subject"]',
-      subject => '@value';
-    process 'td[width="445"]>table[width="440"]>tr>td>input[name="body"]',
-      description => '@value';
-    result qw( subject name link image description );
-  };
-
-  $scraper{message_body} = scraper {
-    process 'td',
-      string => 'TEXT';
-    process 'td>table',
-      table => 'TEXT';
-    result qw( string table );
-  };
-
   $scraper{message} = scraper {
-    process 'table[bgcolor="#CC9933"]>tr>td>table[width="555"]>tr',
-      meta => $scraper{message_meta};
-    process 'table[bgcolor="#CC9933"]>tr>td>table[width="555"]>tr>td[bgcolor="#FFF4E0"]',
-      'body[]' => $scraper{message_body};
-    result qw( meta body );
+    process 'div#messageDetail>div.thumb>a',
+      'link' => '@href';
+    process 'div#messageDetail>div.thumb>a>img',
+      'image' => '@src',
+      'name'  => '@alt';
+    process 'div#messageDetail>div.messageDetailHead>h3',
+      'subject' => 'TEXT';
+    process 'div#messageDetail>div.messageDetailHead>dl>dd',
+      'heads[]' => 'TEXT';
+    process 'div#message_body',
+      'description' => 'TEXT';
+    result qw( subject name link image description heads );
   };
 
   my $stash = $scraper{message}->scrape(\$html);
-
-  my $time = ( map { $_->{string} } grep { !$_->{table} } @{ $stash->{body} } )[0];
+  my $time = $stash->{heads}->[0];
      $time =~ s/^.*(\d{4})\D+(\d{2})\D+(\d{2})\D+(\d{2})\D+(\d{2}).*$/$1\-$2\-$3 $4:$5/;
 
-  my $message = {
-    subject     => $stash->{meta}->{subject},
-    name        => $stash->{meta}->{name},
-    link        => $stash->{meta}->{link},
-    image       => $stash->{meta}->{image},
-    description => $stash->{meta}->{description},
-    time        => $time,
-  };
+  $stash->{time} = $time;
+  delete $stash->{heads};
 
-  return $self->post_process( $message )->[0];
+  return $self->post_process( $stash )->[0];
 }
 
 1;
