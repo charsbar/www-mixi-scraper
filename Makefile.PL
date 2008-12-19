@@ -10,7 +10,7 @@ WriteMakefile(
   PREREQ_PM => {
     'Encode'                         => 0,
     'Exporter'                       => 0,
-    'Module::Pluggable::Fast'        => 0,
+    'Module::Find'                   => 0,
     'String::CamelCase'              => 0,
     'Test::UseAllModules'            => '0.09',
     'Time::HiRes'                    => 0,

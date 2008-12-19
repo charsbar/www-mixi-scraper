@@ -1,5 +1,10 @@
 Revision history for WWW-Mixi-Scraper
 
+0.21  2008/12/20
+  - replaced Module::Pluggable::Fast with Module::Find
+  - made (List|Recent)Echo more text-friendly
+  - made ViewMessage more html-friendly, too
+
 0.20  2008/11/23
   - bumped up the version req of WWW::Mechanize::DecodedContent
     to 0.02 (to support new LWP/WWW::Mechanize's fix)

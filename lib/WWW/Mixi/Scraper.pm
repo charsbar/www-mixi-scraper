@@ -3,12 +3,10 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 use String::CamelCase qw( decamelize );
-use Module::Pluggable::Fast
-  name   => 'plugins',
-  search => [qw( WWW::Mixi::Scraper::Plugin )];
+use Module::Find;
 
 use WWW::Mixi::Scraper::Mech;
 use WWW::Mixi::Scraper::Utils qw( _uri );
@@ -21,14 +19,20 @@ sub new {
 
   my $mech = WWW::Mixi::Scraper::Mech->new(%options);
 
-  my $self = bless { mech => $mech }, $class;
+  my $self = bless { mech => $mech, mode => $mode }, $class;
 
   no strict   'refs';
   no warnings 'redefine';
-  foreach my $plugin ( $class->plugins( mech => $mech, mode => $mode ) ) {
-    my ($name) = decamelize(ref $plugin) =~ /(\w+)$/;
+  foreach my $plugin ( findsubmod 'WWW::Mixi::Scraper::Plugin' ) {
+    my ($name) = decamelize($plugin) =~ /(\w+)$/;
     $self->{$name} = $plugin;
-    *{"$class\::$name"} = sub { shift->{$name} };
+    *{"$class\::$name"} = sub {
+      my $self = shift;
+      my $package = $self->{$name};
+      return $package if ref $package;
+      eval "require $package" or die $@;
+      $self->{$name} = $package->new( mech => $mech, mode => $mode );
+    };
   }
 
   $self;
@@ -52,7 +56,7 @@ sub parse {
     next if exists $options{$key};
     $options{$key} = $uri->query_param($key);
   }
-  $self->$path->parse( %options ) if $self->can($path);
+  $self->$path->parse( %options );
 }
 
 1;

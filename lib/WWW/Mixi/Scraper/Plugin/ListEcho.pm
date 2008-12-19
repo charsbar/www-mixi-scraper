@@ -13,10 +13,10 @@ sub scrape {
   my $scraper = scraper {
     process 'div.archiveList>table>tr>td.comment',
       'recents[]' => scraper {
-        process '//div[1]', id => 'HTML';
-        process '//div[2]', time => 'HTML';
-        process '//div[3]', name => 'HTML';
-        process '//div[4]', comment => 'HTML';
+        process '//div[1]', id      => 'TEXT';
+        process '//div[2]', time    => 'TEXT';
+        process '//div[3]', name    => $self->html_or_text;
+        process '//div[4]', comment => $self->html_or_text;
     };
     result 'recents';
   };

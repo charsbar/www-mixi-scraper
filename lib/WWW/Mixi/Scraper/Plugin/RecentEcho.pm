@@ -12,14 +12,14 @@ sub scrape {
 
     my $scraper = scraper {
         process 'div.archiveList>table>tr', 'recents[]' => scraper {
-            process '//td[@class="comment"]//div[1]', id      => 'HTML';
-            process '//td[@class="comment"]//div[2]', time    => 'HTML';
-            process '//td[@class="comment"]//div[3]', name    => 'HTML';
-            process '//td[@class="comment"]//div[4]', comment => 'HTML';
+            process '//td[@class="comment"]//div[1]', id      => 'TEXT';
+            process '//td[@class="comment"]//div[2]', time    => 'TEXT';
+            process '//td[@class="comment"]//div[3]', name    => $self->html_or_text;
+            process '//td[@class="comment"]//div[4]', comment => $self->html_or_text;
             process '//td[@class="thumb"]//img',      icon    => '@src';
             process
                 '//td[@class="comment"]//a[starts-with(@href, "list_echo.pl")]',
-                reply_name => [ 'HTML', sub { (/&#62;&#62;(.+)/)[0] } ];
+                reply_name => $self->html_or_text;
             process
                 '//td[@class="comment"]//a[starts-with(@href, "list_echo.pl")]',
                 reply_id =>
@@ -34,6 +34,8 @@ sub scrape {
     foreach my $echo ( @{ $stash } ) {
         $echo->{reply_id}   ||= '';
         $echo->{reply_name} ||= '';
+        $echo->{reply_name} =~ s/^(?:&#62;&#62;|>>)//;
+
         $echo->{link}
             = URI->new(
             "http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}"

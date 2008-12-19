@@ -24,7 +24,7 @@ sub scrape {
     process 'div#messageDetail>div.messageDetailHead>dl>dd',
       'heads[]' => 'TEXT';
     process 'div#message_body',
-      'description' => 'TEXT';
+      'description' => $self->html_or_text;
     result qw( subject name link image description heads );
   };
 
