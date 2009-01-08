@@ -6,12 +6,12 @@ use t_live::lib::Utils;
 my $mixi = login_to('show_log.pl');
 
 my $rules = {
-  time => 'datetime',
+  time => 'string', # this can't be valid DateTime object as it has no year
   name => 'string',
   link => 'uri',
 };
 
-date_format('%Y-%m-%d %H:%M');
+# date_format('%m-%d %H:%M');
 
 run_tests('show_log') or ok 1, 'skipped: no tests';
 

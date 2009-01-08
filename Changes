@@ -1,5 +1,10 @@
 Revision history for WWW-Mixi-Scraper
 
+0.22  2009/01/08
+  - mixi refactored its "show_log", and now we can't get
+    the year part of the logs. This may cause serious problem
+    if you use Plagger to know who came to see you.
+
 0.21  2008/12/20
   - replaced Module::Pluggable::Fast with Module::Find
   - made (List|Recent)Echo more text-friendly

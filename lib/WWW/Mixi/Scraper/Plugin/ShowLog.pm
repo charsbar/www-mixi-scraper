@@ -11,27 +11,21 @@ sub scrape {
 
   my %scraper;
   $scraper{logs} = scraper {
-    process 'li',
+    process 'span.date',
       time => 'TEXT';
-    process 'a',
+    process 'span.name>a',
       name => 'TEXT',
       link => '@href';
     result qw( time name link );
   };
 
   $scraper{list} = scraper {
-    process 'div#log_color>ul>li',
+    process 'ul.logList01>li',
       'logs[]' => $scraper{logs};
     result qw( logs );
   };
 
-  return $self->post_process($scraper{list}->scrape(\$html), \&_callback);
-}
-
-sub _callback {
-  my $item  = shift;
-  my @parts = split /\s/, ($item->{time} || ''), 3;
-  $item->{time} = join ' ', @parts[0..1];
+  return $self->post_process($scraper{list}->scrape(\$html));
 }
 
 1;
