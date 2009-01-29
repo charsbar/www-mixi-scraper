@@ -11,18 +11,21 @@ sub scrape {
 
   my %scraper;
   $scraper{messages} = scraper {
-    process 'td',
-      width => '@width',
+    process 'td.subject',
       string => 'TEXT';
-    process 'td>a',
+    process 'td.subject>a',
       link => '@href';
-    process 'td>img',
+    process 'td.status>img',
       envelope => '@src';
-    result qw( string envelope link width );
+    process 'td.date',
+      date => 'TEXT';
+    process 'td.sender',
+      sender => 'TEXT';
+    result qw( string envelope link date sender );
   };
 
   $scraper{list} = scraper {
-    process 'table[width="553"]>tr[bgcolor="#FFFFFF"]>td',
+    process 'div.messageListBody>table.tableBody>tr',
       'messages[]' => $scraper{messages};
     result qw( messages );
   };
@@ -30,15 +33,15 @@ sub scrape {
   my $stash = $self->post_process( $scraper{list}->scrape(\$html) );
 
   my @messages;
-  while ( my ( $env, $del, $sender, $title, $date ) = splice @{ $stash }, 0, 5 ) {
-    next if $env->{width}; # skip header
-
+  for my $msg (@{ $stash }) {
+    $msg->{sender} =~ s/^\s+//;
+    $msg->{sender} =~ s/\s+$//;
     push @messages, {
-      subject  => $title->{string},
-      name     => $sender->{string},
-      link     => $title->{link},
-      envelope => $env->{envelope},
-      time     => $date->{string},
+      subject  => $msg->{string},
+      name     => $msg->{sender},
+      link     => $msg->{link},
+      envelope => $msg->{envelope},
+      time     => $msg->{date},  #???
     };
   }
 
