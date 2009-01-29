@@ -1,5 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
+0.23  2009/01/29
+  - fixed broken ListMessage (html has been changed;
+    thanks to Keiichiro Nagano)
+
 0.22  2009/01/08
   - mixi refactored its "show_log", and now we can't get
     the year part of the logs. This may cause serious problem
