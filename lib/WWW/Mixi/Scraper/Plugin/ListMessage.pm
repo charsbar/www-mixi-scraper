@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
 
-validator {qw( page is_number )};
+validator {qw( page is_number box is_anything )};
 
 sub scrape {
   my ($self, $html) = @_;
