@@ -1,5 +1,8 @@
 Revision history for WWW-Mixi-Scraper
 
+0.24  2009/03/24
+  - list_message now supports box=outbox etc (thanks to knagano)
+
 0.23  2009/01/29
   - fixed broken ListMessage (html has been changed;
     thanks to Keiichiro Nagano)

@@ -24,7 +24,10 @@ tests:
 
   list_message:
     - local: list_message.html
+    - local: list_message_outbox.html
     - remote: -
+    - remote:
+        box: outbox
 
   new_friend_diary:
     - local: new_friend_diary.html

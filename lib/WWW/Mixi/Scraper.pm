@@ -3,7 +3,7 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.23';
+our $VERSION = '0.24';
 
 use String::CamelCase qw( decamelize );
 use Module::Find;

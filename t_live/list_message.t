@@ -10,7 +10,7 @@ my $rules = {
   name     => 'string',
   time     => 'string', # this can't be valid DateTime object as it has no year
   link     => 'uri',
-  envelope => 'uri',
+# envelope => 'uri',    # outbox doesn't have this
 # status   => 'string', # not yet implemented
 };
 
