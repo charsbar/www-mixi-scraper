@@ -17,8 +17,7 @@ WriteMakefile(
     'URI'                            => 0,
     'URI::QueryParam'                => 0,
     'Web::Scraper'                   => '0.17',
-    'WWW::Mechanize'                 => '1.30',
-    'WWW::Mechanize::DecodedContent' => '0.02',
+    'WWW::Mechanize'                 => '1.50',
   },
   ($ExtUtils::MakeMaker::VERSION >= 6.31
     ? (LICENSE => 'perl')

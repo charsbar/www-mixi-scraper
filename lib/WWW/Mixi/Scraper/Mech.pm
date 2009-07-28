@@ -3,8 +3,7 @@ package WWW::Mixi::Scraper::Mech;
 use strict;
 use warnings;
 use Encode;
-use WWW::Mechanize;
-use WWW::Mechanize::DecodedContent;
+use WWW::Mechanize 1.50;
 use WWW::Mixi::Scraper::Utils qw( _uri );
 use Time::HiRes qw( sleep );
 
@@ -92,7 +91,7 @@ sub get {
 sub content {
   my $self = shift;
 
-  $self->{mech}->decoded_content;
+  $self->{mech}->content;
 }
 
 sub get_content {
@@ -147,7 +146,7 @@ gets content of the uri.
 
 =head2 content
 
-returns (hopefully) decoded content. See WWW::Mechanize::DecodedContent for decoding policy.
+returns (hopefully decoded) content.
 
 =head2 get_content
 
@@ -171,7 +170,7 @@ shortcut for {mech}->uri.
 
 =head1 SEE ALSO
 
-L<WWW::Mechanize>, L<WWW::Mechanize::DecodedContent>
+L<WWW::Mechanize>
 
 =head1 AUTHOR
 

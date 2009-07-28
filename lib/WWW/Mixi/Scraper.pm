@@ -3,7 +3,7 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.24';
+our $VERSION = '0.25';
 
 use String::CamelCase qw( decamelize );
 use Module::Find;
@@ -107,11 +107,11 @@ Anyway, though a bit limited, ::Scraper is the only practical option right now.
 
 =head1 IF YOU WANT MORE
 
-If you want more features, please send me a patch, or, preferably, commit a patch to the L<coderepos repository|http://coderepos.org/share/>. Just telling me where you want to scrape would be ok but it may take a longer time to implement especially when it's new or less popular and I don't have enough samples.
+If you want more features, please send me a patch, or, preferably, commit a patch to the coderepos repository (L<http://coderepos.org/share/>). Just telling me where you want to scrape would be ok but it may take a longer time to implement especially when it's new or less popular and I don't have enough samples.
 
 =head1 ON Plagger::Plugin::CustomFeed::MixiScraper
 
-Usually you want to use this with L<Plagger>, but unfortunately, current CPAN version of Plagger (0.7.17) doesn't have the above plugin. You can always get the latest version of the plugin from L<Plagger's official repository|http://svn.bulknews.net/repos/plagger/trunk/plagger/lib/Plagger/Plugin/CustomFeed/MixiScraper.pm>. See L<Plagger's official site|http://plagger.org/> for instructions to update your Plagger and install extra plugins.
+Usually you want to use this with L<Plagger>, but unfortunately, the current CPAN version of Plagger (0.7.17) doesn't have the above plugin. You can always get the latest version of the plugin from the Plagger's official repository at github (L<http://github.com/miyagawa/plagger/tree/master>). See Plagger's official site (L<http://plagger.org/>) for instructions to update your Plagger and install extra plugins.
 
 =head1 METHODS
 

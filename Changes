@@ -1,5 +1,10 @@
 Revision history for WWW-Mixi-Scraper
 
+0.25  2009/07/28
+  - fixed pod (L<NAME|http://...> style of links are not permitted)
+  - removed WWW::Mechanize::DecodedContent dependency,
+    as the current WWW::Mechanize (>= 1.50) does the trick by itself
+
 0.24  2009/03/24
   - list_message now supports box=outbox etc (thanks to knagano)
 

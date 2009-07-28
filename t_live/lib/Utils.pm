@@ -96,7 +96,7 @@ sub test_local {
 
   $local = 1;
 
-  warn "local test";
+  print STDERR "local test\n";
 
   main::test(%options);
 }
@@ -106,7 +106,7 @@ sub test_remote {
 
   $local = 0;
 
-  warn "remote test";
+  print STDERR "remote test\n";
 
   main::test(@_);
 }
