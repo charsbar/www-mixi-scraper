@@ -37,9 +37,9 @@ tests:
     - local: new_bbs.html
     - remote: -
 
-  new_music:
-    - local: new_music.html
-    - remote: -
+#  new_music:
+#    - local: new_music.html
+#    - remote: -
 
   new_video:
     - local: new_video.html
