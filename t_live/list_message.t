@@ -9,13 +9,13 @@ my $mixi = login_to('list_message.pl');
 my $rules = {
   subject  => 'string',
   name     => 'string',
-  time     => 'string', # this can't be valid DateTime object as it has no year
+  time     => 'datetime',
   link     => 'uri',
 # envelope => 'uri',    # outbox doesn't have this
 # status   => 'string', # not yet implemented
 };
 
-# date_format('%m-%d');
+date_format('%m-%d');
 
 run_tests('list_message') or ok 1, 'skipped: no tests';
 

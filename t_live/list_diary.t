@@ -9,7 +9,7 @@ my $mixi = login_to('list_diary.pl');
 my $rules = {
   subject     => 'string',
   description => 'string',
-  time        => 'string',  # this can't be valid DateTime object as it has no year
+  time        => 'datetime',
   link        => 'uri',
   count       => 'integer',
   images      => {
@@ -18,7 +18,7 @@ my $rules = {
   },
 };
 
-# date_format('%m-%d %H:%M');
+date_format('%Y-%m-%d %H:%M');
 
 run_tests('list_diary') or ok 1, 'skipped: no tests';
 

@@ -13,7 +13,7 @@ my $rules = {
   link    => 'uri',
 };
 
-date_format('%Y-%m-%d %H:%M');
+date_format('%m-%d %H:%M');
 
 run_tests('new_video') or ok 1, 'skipped: no tests';
 
