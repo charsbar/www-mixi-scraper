@@ -3,7 +3,7 @@ package WWW::Mixi::Scraper;
 use strict;
 use warnings;
 
-our $VERSION = '0.25';
+our $VERSION = '0.27';
 
 use String::CamelCase qw( decamelize );
 use Module::Find;
@@ -107,7 +107,7 @@ Anyway, though a bit limited, ::Scraper is the only practical option right now.
 
 =head1 IF YOU WANT MORE
 
-If you want more features, please send me a patch, or, preferably, commit a patch to the coderepos repository (L<http://coderepos.org/share/>). Just telling me where you want to scrape would be ok but it may take a longer time to implement especially when it's new or less popular and I don't have enough samples.
+If you want more features, please send me a patch, or a pull request from your github fork. Just telling me where you want to scrape would be ok but it may take a longer time to implement especially when it's new or less popular and I don't have enough samples.
 
 =head1 ON Plagger::Plugin::CustomFeed::MixiScraper
 
@@ -157,7 +157,7 @@ Kenichi Ishigaki, E<lt>ishigaki at cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2007 by Kenichi Ishigaki.
+Copyright (C) 2007-2010 by Kenichi Ishigaki.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
