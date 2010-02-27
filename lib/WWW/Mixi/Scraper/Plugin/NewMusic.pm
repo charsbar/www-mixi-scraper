@@ -2,9 +2,8 @@ package WWW::Mixi::Scraper::Plugin::NewMusic;
 use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
-use base qw( WWW::Mixi::Scraper::Plugin::NewFriendDiary );
 
-validator {};
+sub scrape { warn "This plugin is deprecated"; return [] }
 
 1;
 
@@ -16,21 +15,11 @@ WWW::Mixi::Scraper::Plugin::NewMusic
 
 =head1 DESCRIPTION
 
-This would be equivalent to WWW::Mixi->parse_new_music().
-(though the latter is not implemented yet as of writing this)
+This plugin is deprecated.
 
 =head1 METHOD
 
 =head2 scrape
-
-returns an array reference of
-
-  {
-    subject  => 'music title',
-    name     => 'someone',
-    link     => 'http://music.mixi.jp/show_playlist.pl?id=xxx',
-    time     => 'yyyy-mm-dd hh:mm',
-  }
 
 =head1 AUTHOR
 
