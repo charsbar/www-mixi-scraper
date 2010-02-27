@@ -6,7 +6,7 @@ use warnings;
 use base qw/Exporter/;
 use WWW::Mixi::Scraper;
 use Encode;
-use DateTime::Format::Strptime;
+use Time::Piece;
 use File::Slurp qw( read_file );
 use File::Spec;
 use HTTP::Cookies;
@@ -79,14 +79,7 @@ sub test_file {
   decode( 'euc-jp' => read_file( $file ) );
 }
 
-sub date_format {
-  my $pattern = shift;
-
-  $date_format = DateTime::Format::Strptime->new(
-    pattern => $pattern,
-    time_zone => 'Asia/Tokyo',
-  )
-}
+sub date_format { $date_format = shift }
 
 sub test_local {
   my %options = @_;
@@ -126,8 +119,8 @@ sub matches {
     }
     if ( $rule eq 'datetime' ) {
       _ok( $key, $item->{$key} );
-      my $dt = $date_format->parse_datetime( $item->{$key} );
-      Test::More::ok defined $dt, 'proper datetime';
+      eval { Time::Piece->strptime($item->{$key}, $date_format) };
+      Test::More::ok !$@, 'proper datetime';
     }
     if ( $rule eq 'uri' ) {
       _ok( $key, $item->{$key} );
