@@ -32,15 +32,16 @@ sub scrape {
       description => $self->html_or_text;
     process 'div.diaryPhoto>table>tr>td',
       'images[]' => $scraper{images};
-    process 'div.personalNavigation01>ul.personalNaviHome>li.top>a',
-      mylink => '@href';
-    process 'div.personalNavigation01>ul.personalNaviFriend>li.top>a',
-      link => '@href';
-    result qw( time subject description images link mylink string );
+    process 'div.diaryPaging01>div.diaryPagingLeft>a',
+      prev_link => '@href';
+    result qw( time subject description images prev_link string );
   };
 
-  my $stash = $self->post_process($scraper{diary}->scrape(\$html))->[0];
-  $stash->{link} ||= delete $stash->{mylink};
+  my $stash = $scraper{diary}->scrape(\$html);
+  $stash->{link} = delete $stash->{prev_link};
+  $stash->{link} =~ s/neighbor_diary/view_diary/;
+  $stash->{link} =~ s/&direction=prev.*//;
+  $stash = $self->post_process($stash)->[0];
 
   my $string = delete $stash->{string} || '';
   $stash->{subject} =~ s/$string$//;
