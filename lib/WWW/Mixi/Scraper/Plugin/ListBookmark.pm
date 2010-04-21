@@ -4,38 +4,7 @@ use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
 
-validator {};
-
-sub scrape {
-  my ($self, $html) = @_;
-
-  my %scraper;
-  $scraper{bookmark} = scraper {
-    process 'div.heading>a.name',
-      link => '@href',
-      name => 'TEXT';
-    process 'div.heading>span>span',
-      last_login => 'TEXT';
-    result qw( link name last_login );
-  };
-
-  $scraper{list} = scraper {
-    process 'ul.list>li',
-      'bookmarks[]' => $scraper{bookmark};
-    result qw( bookmarks );
-  };
-
-  my $results_ref = $self->post_process(
-    $scraper{list}->scrape(\$html) => \&_extract_name
-  );
-
-  for (@$results_ref) {
-      ($_->{id}) = $_->{link} =~ m/show_friend\.pl\?id=(\d+)$/;
-      ($_->{last_login}) = $_->{last_login} =~ m/^\(?(.*?)\)?$/;
-  }
-
-  return $results_ref;
-}
+sub scrape { warn "This plugin is deprecated"; return [] }
 
 1;
 
@@ -47,22 +16,11 @@ WWW::Mixi::Scraper::Plugin::ListBookmark
 
 =head1 DESCRIPTION
 
-This would be equivalent to WWW::Mixi->parse_list_bookmark().
-(though the latter is not implemented yet as of writing this)
+This plugin is deprecated.
 
 =head1 METHOD
 
 =head2 scrape
-
-returns an array reference of
-
-  {
-    id         => 3755394,
-    name       => 'ぼくちん',
-    link       => 'http://mixi.jp/show_friend.pl?id=3755394',
-    last_login => '5分以内'、
-  }
-  }
 
 =head1 AUTHOR
 
