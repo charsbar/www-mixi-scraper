@@ -1,7 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
-0.28 to be released
+0.28 2010/04/21
   - fixed login issue, applied a patch by nipotan++
+  - deprecated ListEcho, RecentEcho, ResEcho, ViewEcho, ListBookmark
+    plugins
 
 0.27  2010/02/27
   - forgot to fix metadata
