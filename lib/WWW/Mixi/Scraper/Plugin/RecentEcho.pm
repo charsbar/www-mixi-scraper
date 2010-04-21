@@ -3,46 +3,8 @@ package WWW::Mixi::Scraper::Plugin::RecentEcho;
 use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
-use URI;
 
-validator { ( page => 'is_number' ) };
-
-sub scrape {
-    my ( $self, $html ) = @_;
-
-    my $scraper = scraper {
-        process 'div.archiveList>table>tr', 'recents[]' => scraper {
-            process '//td[@class="comment"]//div[1]', id      => 'TEXT';
-            process '//td[@class="comment"]//div[2]', time    => 'TEXT';
-            process '//td[@class="comment"]//div[3]', name    => $self->html_or_text;
-            process '//td[@class="comment"]//div[4]', comment => $self->html_or_text;
-            process '//td[@class="thumb"]//img',      icon    => '@src';
-            process
-                '//td[@class="comment"]//a[starts-with(@href, "list_echo.pl")]',
-                reply_name => $self->html_or_text;
-            process
-                '//td[@class="comment"]//a[starts-with(@href, "list_echo.pl")]',
-                reply_id =>
-                [ '@href', sub { (/list_echo.pl\?id=(\d+)\&/)[0] } ];
-
-        };
-        result 'recents';
-    };
-
-    my $stash = $self->post_process( $scraper->scrape( \$html ) );
-
-    foreach my $echo ( @{ $stash } ) {
-        $echo->{reply_id}   ||= '';
-        $echo->{reply_name} ||= '';
-        $echo->{reply_name} =~ s/^(?:&#62;&#62;|>>)//;
-
-        $echo->{link}
-            = URI->new(
-            "http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}"
-            );
-    }
-    return $stash;
-}
+sub scrape { warn "This plugin is deprecated"; return [] }
 
 1;
 
@@ -54,27 +16,11 @@ WWW::Mixi::Scraper::Plugin::RecentEcho
 
 =head1 DESCRIPTION
 
-This would be equivalent to WWW::Mixi->parse_recent_echo().
-(though the latter is not implemented yet as of writing this)
+This plugin is deprecated.
 
 =head1 METHOD
 
 =head2 scrape
-
-returns an array reference of
-
-  {
-    link       => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
-    id         => 'xxxx',
-    time       => 'yyyymmddhhmmss',
-    name       => 'username',
-    comment    => 'comment',
-    icon       => 'icon',
-    reply_name => 'username',
-    reply_id   => 'xxxx',
-  }
-
-reply_name and reply_id may be blank.
 
 =head1 AUTHOR
 

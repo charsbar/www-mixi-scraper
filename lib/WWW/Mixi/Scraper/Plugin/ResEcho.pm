@@ -3,30 +3,8 @@ package WWW::Mixi::Scraper::Plugin::ResEcho;
 use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
-use URI;
 
-validator {( page => 'is_number' )};
-
-sub scrape {
-  my ($self, $html) = @_;
-
-  my $scraper = scraper {
-    process 'div.archiveList>table>tr>td.comment',
-      'recents[]' => scraper {
-        process '//div[1]', id => 'HTML';
-        process '//div[2]', time => 'HTML';
-        process '//div[3]', name => 'HTML';
-        process '//div[4]', comment => 'HTML';
-    };
-    result 'recents';
-  };
-
-  my $stash = $self->post_process($scraper->scrape(\$html));
-  foreach my $echo ( @{ $stash } ) {
-      $echo->{link} = URI->new("http://mixi.jp/view_echo.pl?id=@{[$echo->{id}]}&post_time=@{[$echo->{time}]}");
-  }
-  return $stash;
-}
+sub scrape { warn "This plugin is deprecated"; return [] }
 
 1;
 
@@ -38,22 +16,11 @@ WWW::Mixi::Scraper::Plugin::ResEcho
 
 =head1 DESCRIPTION
 
-This would be equivalent to WWW::Mixi->parse_res_echo().
-(though the latter is not implemented yet as of writing this)
+This plugin is deprecated.
 
 =head1 METHOD
 
 =head2 scrape
-
-returns an array reference of
-
-  {
-    link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
-    id      => 'xxxx',
-    time    => 'yyyymmddhhmmss',
-    name    => 'username',
-    comment => 'comment',
-  }
 
 =head1 AUTHOR
 

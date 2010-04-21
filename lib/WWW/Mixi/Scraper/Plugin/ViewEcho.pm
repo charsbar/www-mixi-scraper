@@ -3,25 +3,8 @@ package WWW::Mixi::Scraper::Plugin::ViewEcho;
 use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
-use URI;
 
-validator {( id => 'is_number', post_time => 'is_number' )};
-
-sub scrape {
-  my ($self, $html) = @_;
-
-  my $scraper = scraper {
-      process '#echo_member_id_1', id => 'TEXT';
-      process '#echo_post_time_1', time => 'TEXT';
-      process '#echo_nickname_1', name => 'TEXT';
-      process '#echo_body_1', comment => 'TEXT';
-      result qw( id time name comment );
-  };
-
-  my $stash = $self->post_process($scraper->scrape(\$html))->[0];
-  $stash->{link} = URI->new("http://mixi.jp/view_echo.pl?id=@{[$stash->{id}]}&post_time=@{[$stash->{time}]}");
-  return $stash;
-}
+sub scrape { warn "This plugin is deprecated"; return [] }
 
 1;
 
@@ -33,22 +16,11 @@ WWW::Mixi::Scraper::Plugin::ViewEcho
 
 =head1 DESCRIPTION
 
-This would be equivalent to WWW::Mixi->parse_view_echo().
-(though the latter is not implemented yet as of writing this)
+This plugin is deprecated.
 
 =head1 METHOD
 
 =head2 scrape
-
-returns a hash reference of
-
-  {
-    link    => 'http://mixi.jp/view_echo.pl?id=xxxx&post_time=xxxx',
-    id      => 'xxxx',
-    time    => 'yyyymmddhhmmss',
-    name    => 'username',
-    comment => 'comment',
-  }
 
 =head1 AUTHOR
 

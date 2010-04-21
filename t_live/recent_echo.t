@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More qw(no_plan);
+use Test::More skip_all => 'this plugin is deprecated';
 use Test::NoWarnings;
 use t_live::lib::Utils;
 
