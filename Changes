@@ -1,5 +1,8 @@
 Revision history for WWW-Mixi-Scraper
 
+0.28 to be released
+  - fixed login issue, applied a patch by nipotan++
+
 0.27  2010/02/27
   - forgot to fix metadata
 

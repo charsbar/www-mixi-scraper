@@ -75,7 +75,7 @@ sub get {
   $self->{mech}->get($uri);
 
   # adapted from Plagger::Plugin::CustomFeed::Mixi
-  if ( $self->content =~ /action="\/?login\.pl"/ ) {
+  if ( $self->content =~ /action="\/?login\.pl/ ) {
     # shouldn't be path but path_query, obviously
     $self->{login}->{next_url} = $uri->path_query;
     $self->login;
