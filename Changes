@@ -1,5 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
+0.29 2010/07/03
+  - deprecated ShowCalendar plugin, which is replaced by ShowSchedule
+    plugin
+
 0.28 2010/04/21
   - fixed login issue, applied a patch by nipotan++
   - deprecated ListEcho, RecentEcho, ResEcho, ViewEcho, ListBookmark
