@@ -38,7 +38,7 @@ sub scrape {
   };
 
   $scraper{list} = scraper {
-    process 'div.listDiaryBlock',
+    process 'div.listDiaryBlock,div.listDiaryBlockLast',
       'diaries[]' => $scraper{diaries};
     result qw( diaries );
   };

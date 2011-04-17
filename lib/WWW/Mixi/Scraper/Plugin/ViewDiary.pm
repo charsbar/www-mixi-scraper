@@ -47,18 +47,18 @@ sub scrape {
   $stash->{subject} =~ s/$string$//;
 
   $scraper{comments} = scraper {
-    process 'dl.commentList01>dt>span.commentTitleDate',
+    process 'dl.comment>dt>span.date',
       time => 'TEXT';
-    process 'dl.commentList01>dt>span.commentTitleName>a',
+    process 'dl.comment>dt>a',
       link => '@href',
       name => 'TEXT';
-    process 'dl.commentList01>dd',
+    process 'dl.comment>dd',
       description => $self->html_or_text;
     result qw( time link name description );
   };
 
   $scraper{list} = scraper {
-    process 'div.diaryCommentbox,div.diaryCommentboxLast',
+    process 'div.commentListArea>ul>li',
       'comments[]' => $scraper{comments};
     result qw( comments );
   };
