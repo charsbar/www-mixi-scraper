@@ -1,5 +1,9 @@
 Revision history for WWW-Mixi-Scraper
 
+0.30 2011/04/18
+  - fixed (List|View)Diary (the last entry in the list and comments)
+    (patched by ktat)
+
 0.29 2010/07/03
   - deprecated ShowCalendar plugin, which is replaced by ShowSchedule
     plugin
