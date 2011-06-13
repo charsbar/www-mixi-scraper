@@ -1,5 +1,8 @@
 Revision history for WWW-Mixi-Scraper
 
+0.31 2011/06/13
+  - deprecated ShowLog plugin
+
 0.30 2011/04/18
   - fixed (List|View)Diary (the last entry in the list and comments)
     (patched by ktat)
