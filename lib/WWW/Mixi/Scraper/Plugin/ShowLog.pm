@@ -4,29 +4,7 @@ use strict;
 use warnings;
 use WWW::Mixi::Scraper::Plugin;
 
-validator {( page => 'is_number' )};
-
-sub scrape {
-  my ($self, $html) = @_;
-
-  my %scraper;
-  $scraper{logs} = scraper {
-    process 'span.date',
-      time => 'TEXT';
-    process 'span.name>a',
-      name => 'TEXT',
-      link => '@href';
-    result qw( time name link );
-  };
-
-  $scraper{list} = scraper {
-    process 'ul.logList01>li',
-      'logs[]' => $scraper{logs};
-    result qw( logs );
-  };
-
-  return $self->post_process($scraper{list}->scrape(\$html));
-}
+sub scrape { warn "This plugin is deprecated"; return [] }
 
 1;
 
@@ -38,19 +16,11 @@ WWW::Mixi::Scraper::Plugin::ShowLog
 
 =head1 DESCRIPTION
 
-This is equivalent to WWW::Mixi->parse_show_log().
+This plugin is deprecated
 
 =head1 METHOD
 
 =head2 scrape
-
-returns an array reference of 
-
-  {
-    link => 'http://mixi.jp/show_friend.pl?id=xxxx',
-    name => 'someone',
-    time => 'yyyy-mm-dd hh:mm'
-  }
 
 =head1 AUTHOR
 
