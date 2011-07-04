@@ -114,6 +114,12 @@ sub matches {
     if ( $rule eq 'string' ) {
       _ok( $key, $item->{$key} );
     }
+    if ( $rule eq 'maybe_string' ) {
+      SKIP: {
+        Test::More::skip "$key is not defined", 1 unless defined $item->{$key} &&  length $item->{$key};
+        _ok( $key, $item->{$key} );
+      }
+    }
     if ( $rule eq 'integer' ) {
       _ok( $key, $item->{$key} );
     }
@@ -125,6 +131,13 @@ sub matches {
     if ( $rule eq 'uri' ) {
       _ok( $key, $item->{$key} );
       Test::More::ok ref $item->{$key} && $item->{$key}->isa('URI'), 'proper uri';
+    }
+    if ( $rule eq 'maybe_uri' ) {
+      SKIP: {
+        Test::More::skip "$key is not defined", 2 unless defined $item->{$key} &&  length $item->{$key};
+        _ok( $key, $item->{$key} );
+        Test::More::ok ref $item->{$key} && $item->{$key}->isa('URI'), 'proper uri';
+      }
     }
     if ( ref $rule eq 'HASH' ) {
       if ( ref $item->{$key} eq 'ARRAY' ) {
