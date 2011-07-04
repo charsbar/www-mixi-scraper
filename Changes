@@ -1,5 +1,10 @@
 Revision history for WWW-Mixi-Scraper
 
+0.32 2011/07/05
+  - fixed ViewEvent plugin (handling of quit users etc)
+  - fixed ShowFriend plugin (relation/step can't be scraped anymore)
+  - added maybe_(string|uri) test rules
+
 0.31 2011/06/13
   - deprecated ShowLog plugin
 
