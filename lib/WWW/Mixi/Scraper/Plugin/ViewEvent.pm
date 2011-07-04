@@ -43,19 +43,23 @@ sub scrape {
     process 'dd.bbsContent>dl>dt>a',
       'name'      => 'TEXT',
       'name_link' => '@href';
+    process 'dd.bbsContent>dl>dt',
+      'name_string' => 'TEXT',
     process 'dd.bbsContent>dl>dd',
       'description' => $self->html_or_text;
     process 'div.communityPhoto>table>tr>td',
       'images[]' => $scraper{images};
     process 'dl.bbsList01>dd.bbsInfo>dl',
       'infos[]' => $scraper{infos};
-    result qw( time subject name name_link images infos description );
+    result qw( time subject name_string name name_link images infos description );
   };
 
   $scraper{comment_body} = scraper {
     process 'dl.commentContent01>dt>a',
       'name_link' => '@href',
       'name'      => 'TEXT';
+    process 'dl.commentContent01>dt',
+      'name_string' => 'TEXT';
     process 'dl.commentContent01>dd',
       'description' => $self->html_or_text;
     process 'dl.commentContent01>dd>table>tr>td',
@@ -74,6 +78,10 @@ sub scrape {
   };
 
   my $stash = $self->post_process($scraper{topic}->scrape(\$html))->[0];
+
+  if ($stash->{name_string} && !$stash->{name}) {
+    $stash->{name} = $stash->{name_string};
+  }
 
   foreach my $item (@{ $stash->{infos} || [] }) {
     if ( $item->{name} eq '開催日時' ) {
@@ -105,6 +113,10 @@ sub scrape {
   foreach my $comment ( @comments ) {
     $comment->{time}      = _datetime( shift @dates );
     $comment->{subject}   = shift @sender_ids;
+
+    if (!$comment->{name}) {
+      $comment->{name} = $comment->{name_string} || ' ';
+    }
 
     # incompatible with WWW::Mixi to let comment links
     # look more 'permanent' to make plagger/rss readers happier

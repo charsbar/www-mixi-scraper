@@ -19,21 +19,21 @@ my $rules = {
     thumb_link => 'uri',
   },
   name        => 'string',
-  name_link   => 'uri',
+  name_link   => 'maybe_uri',
 # join        => 'integer', # not yet implemented
   community => {
     name => 'string',
-    link => 'uri',
+    link => 'maybe_uri',
   },
   list => {
     count   => 'integer',
-    subject => 'string',
-    link    => 'uri',
+    subject => 'maybe_string',
+    link    => 'maybe_uri',
   },
   comments => {
     subject     => 'string',
     name        => 'string',
-    name_link   => 'uri',
+    name_link   => 'maybe_uri',
     description => 'string',
     time        => 'datetime',
     link        => 'uri_if_remote',
