@@ -10,7 +10,8 @@ my $rules = {
   name  => 'string',
   image => 'uri',
   count => 'integer',
-  link  => 'uri_if_remote',
+  link  => 'uri',
+  description => 'string',
 };
 
 run_tests('show_friend') or ok 1, 'skipped: no tests';
@@ -26,14 +27,4 @@ sub test {
 
   my $outline = $friend->{outline};
   matches( $outline => $rules );
-
-  my $step = $outline->{step};
-  ok defined $step;
-  ok $outline->{description} if $step; # null if it's you
-  if ( $step > 1 ) {
-    ok $outline->{relation};
-    matches(
-      $outline->{relation} => { name => 'string', link => 'uri' }
-    );
-  }
 }

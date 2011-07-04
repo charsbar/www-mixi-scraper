@@ -22,15 +22,15 @@ sub _scrape_profile {
 
   my %scraper;
   $scraper{items} = scraper {
-    process 'dl>dt',
+    process 'th',
       key => 'TEXT';
-    process 'dl>dd',
+    process 'td',
       value => $self->html_or_text;
     result qw( key value );
   };
 
   $scraper{profile} = scraper {
-    process 'div#profile>ul>li',
+    process 'div.profileListTable>div>table>tr',
       'items[]' => $scraper{items};
     result qw( items );
   };
@@ -50,40 +50,22 @@ sub _scrape_outline {
   my ($self, $html) = @_;
 
   my %scraper;
-  $scraper{relations} = scraper {
-    process 'a',
-      link => '@href',
-      name => 'TEXT';
-    result qw( link name );
-  };
-
   $scraper{outline} = scraper {
-    process 'div#myProfile>div.contents01>h3',
+    process 'div#myArea>div.profilePhoto>div.contents>p.name',
       'string' => 'TEXT';
-    process 'div#myProfile>div.contents01>p.loginTime',
+    process 'div#myArea>div.profilePhoto>div.contents>p.name>span.loginTime',
       'description' => 'TEXT';
-    process 'div#myProfile>p.friendPath>a',
-      'relations[]' => $scraper{relations};
-    process 'div#myProfile>div.contents01>img',
+    process 'div#myArea>div.profilePhoto>div.contents>p.photo>a>img',
       image => '@src';
-    process 'div#localNavigation>ul.localNaviFriend>li.top>a',
+    process 'div.personalNavigation>ul>li.profile>a',
       link  => '@href';
-    result qw( image string relations description link );
+    result qw( image string description link );
   };
 
   my $stash = $self->post_process($scraper{outline}->scrape(\$html))->[0];
 
-  my @relations;
-  foreach my $rel (@{ delete $stash->{relations} || [] }) {
-    next unless $rel->{link} =~ /^show_friend/;
-    $rel->{link} = _uri( $rel->{link} );
-    push @relations, $rel;
-  }
-  $stash->{step} = scalar @relations;
-  $stash->{relation} = shift @relations if @relations > 1;
-
   my $string = delete $stash->{string} || '';
-  if ( $string =~ s/\((\d+)\)$// ) {
+  if ( $string =~ s/さん\((\d+)\)\s.+// ) {
     $stash->{name}  = $string;
     $stash->{count} = $1;
   }
@@ -121,11 +103,6 @@ returns a hash reference of the person's profile.
       image => 'http://img.mixi.jp/photo/member/xx/xx/xxx.jpg',
       description => 'last login time',
       count => 20,
-      step => 2,
-      relation => {
-        name => 'someone who knows him/her directly',
-        link => 'http://mixi.jp/show_friend.pl?id=yyy',
-      },
     },
   }
 
