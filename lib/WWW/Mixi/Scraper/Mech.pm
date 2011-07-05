@@ -40,7 +40,7 @@ sub login {
 
   $self->may_have_errors('Login failed');
 
-  warn "logged in to mixi";
+  # warn "logged in to mixi";
 }
 
 sub logout {
