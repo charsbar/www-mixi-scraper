@@ -7,7 +7,7 @@ use t_live::lib::Utils;
 my $mixi = login_to('view_echo.pl');
 
 my $rules = {
-  link       => 'uri', 
+  link       => 'uri',
   id         => 'integer',
   time       => 'integer',
   name       => 'string',

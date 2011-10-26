@@ -158,7 +158,7 @@ sub __images {
     $link  =~ s/s\.jpg$/\.jpg/;
     $thumb =~ s/(?:[^s])\.jpg$/s\.jpg/;
   }
-  else { 
+  else {
     $link  = $item->{link} || '';
     $thumb = $item->{thumb_link};
 

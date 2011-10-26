@@ -129,7 +129,7 @@ WWW::Mixi::Scraper::Mech
     my $html = $mech->get_content('/new_friend_diary.pl');
 
     $mech->logout;
- 
+
 =head1 DESCRIPTION
 
 Mainly used internally.

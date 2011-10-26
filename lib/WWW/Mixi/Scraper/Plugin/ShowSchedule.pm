@@ -44,7 +44,7 @@ sub scrape {
   };
 
   $scraper{list} = scraper {
-    process 'div.contents>table.calendarTable>tbody>tr>td', 
+    process 'div.contents>table.calendarTable>tbody>tr>td',
       'string[]' => $scraper{day};
     result qw( string );
   };
